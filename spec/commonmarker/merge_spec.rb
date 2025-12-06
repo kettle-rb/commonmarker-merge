@@ -2,10 +2,96 @@
 
 RSpec.describe Commonmarker::Merge do
   it "has a version number" do
-    expect(Commonmarker::Merge::VERSION).not_to be nil
+    expect(Commonmarker::Merge::VERSION).not_to be_nil
   end
 
-  it "does something useful" do
-    expect(false).to eq(true)
+  describe "Error" do
+    it "inherits from Ast::Merge::Error" do
+      expect(described_class::Error.superclass).to eq(Ast::Merge::Error)
+    end
+
+    it "can be raised" do
+      expect { raise described_class::Error, "test" }.to raise_error(described_class::Error, "test")
+    end
+
+    it "is a StandardError" do
+      expect(described_class::Error.ancestors).to include(StandardError)
+    end
+  end
+
+  describe "ParseError" do
+    it "inherits from Ast::Merge::ParseError" do
+      expect(described_class::ParseError.superclass).to eq(Ast::Merge::ParseError)
+    end
+
+    it "can be raised with errors array" do
+      errors = [StandardError.new("parse error")]
+      error = described_class::ParseError.new(errors: errors)
+      expect(error.errors).to eq(errors)
+    end
+
+    it "builds message from class name" do
+      errors = [StandardError.new("test")]
+      error = described_class::ParseError.new(errors: errors)
+      expect(error.message).to include("commonmarker")
+      expect(error.message).to include("merge")
+      expect(error.message).to include("parseerror")
+    end
+  end
+
+  describe "TemplateParseError" do
+    it "inherits from ParseError" do
+      expect(described_class::TemplateParseError.superclass).to eq(described_class::ParseError)
+    end
+
+    it "can be raised with errors" do
+      errors = [StandardError.new("template error")]
+      error = described_class::TemplateParseError.new(errors: errors)
+      expect(error.errors).to eq(errors)
+      expect(error.message).to include("templateparseerror")
+    end
+  end
+
+  describe "DestinationParseError" do
+    it "inherits from ParseError" do
+      expect(described_class::DestinationParseError.superclass).to eq(described_class::ParseError)
+    end
+
+    it "can be raised with errors" do
+      errors = [StandardError.new("destination error")]
+      error = described_class::DestinationParseError.new(errors: errors)
+      expect(error.errors).to eq(errors)
+      expect(error.message).to include("destinationparseerror")
+    end
+  end
+
+  describe "autoloads" do
+    it "autoloads DebugLogger" do
+      expect(described_class::DebugLogger).to be_a(Module)
+    end
+
+    it "autoloads FreezeNode" do
+      expect(described_class::FreezeNode).to be_a(Class)
+    end
+
+    it "autoloads MergeResult" do
+      expect(described_class::MergeResult).to be_a(Class)
+    end
+
+    it "autoloads FileAnalysis" do
+      expect(described_class::FileAnalysis).to be_a(Class)
+    end
+
+    it "autoloads FileAligner" do
+      expect(described_class::FileAligner).to be_a(Class)
+    end
+
+    it "autoloads ConflictResolver" do
+      expect(described_class::ConflictResolver).to be_a(Class)
+    end
+
+    it "autoloads SmartMerger" do
+      expect(described_class::SmartMerger).to be_a(Class)
+    end
   end
 end

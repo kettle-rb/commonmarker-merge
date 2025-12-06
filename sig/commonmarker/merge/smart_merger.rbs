@@ -1,0 +1,53 @@
+# Type signatures for Commonmarker::Merge::SmartMerger
+#
+# Orchestrates the smart merge process for Markdown files.
+# Main entry point for intelligent Markdown merging.
+
+module Commonmarker
+  module Merge
+    class SmartMerger
+      # Analysis of the template file
+      attr_reader template_analysis: FileAnalysis
+
+      # Analysis of the destination file
+      attr_reader dest_analysis: FileAnalysis
+
+      # Aligner for finding matches and differences
+      attr_reader aligner: FileAligner
+
+      # Resolver for handling conflicting content
+      attr_reader resolver: ConflictResolver
+
+      # Initialize a SmartMerger
+      def initialize: (
+        String template_content,
+        String dest_content,
+        ?signature_generator: (^(untyped) -> (Array[untyped] | nil | untyped))?,
+        ?signature_match_preference: Symbol,
+        ?add_template_only_nodes: bool,
+        ?freeze_token: String,
+        ?options: Hash[Symbol, untyped]
+      ) -> void
+
+      # Perform the merge operation
+      def merge: () -> MergeResult
+
+      private
+
+      # Process alignment entries and build result
+      def process_alignment: (Array[Hash[Symbol, untyped]] alignment) -> [Array[String], Hash[Symbol, untyped], Array[Hash[Symbol, untyped]], Array[Hash[Symbol, untyped]]]
+
+      # Process a matched node pair
+      def process_match: (Hash[Symbol, untyped] entry, Hash[Symbol, untyped] stats) -> [String?, Hash[Symbol, untyped]?]
+
+      # Process a template-only node
+      def process_template_only: (Hash[Symbol, untyped] entry, Hash[Symbol, untyped] stats) -> String?
+
+      # Process a destination-only node
+      def process_dest_only: (Hash[Symbol, untyped] entry, Hash[Symbol, untyped] stats) -> [String?, Hash[Symbol, untyped]?]
+
+      # Convert a node to its source text
+      def node_to_source: (untyped node, FileAnalysis analysis) -> String
+    end
+  end
+end

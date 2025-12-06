@@ -1,0 +1,18 @@
+# Type signatures for Commonmarker::Merge::DebugLogger
+#
+# Debug logging utility for Commonmarker::Merge operations.
+# Extends Ast::Merge::DebugLogger module.
+
+module Commonmarker
+  module Merge
+    module DebugLogger
+      extend Ast::Merge::DebugLogger
+
+      # Configured environment variable name
+      self.env_var_name: String
+
+      # Configured log prefix
+      self.log_prefix: String
+    end
+  end
+end

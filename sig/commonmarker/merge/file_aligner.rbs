@@ -1,0 +1,27 @@
+# Type signatures for Commonmarker::Merge::FileAligner
+#
+# Aligns Markdown block elements between template and destination files.
+# Uses structural signatures to match elements.
+
+module Commonmarker
+  module Merge
+    class FileAligner
+      # Template file analysis
+      attr_reader template_analysis: FileAnalysis
+
+      # Destination file analysis
+      attr_reader dest_analysis: FileAnalysis
+
+      # Initialize a file aligner
+      def initialize: (FileAnalysis template_analysis, FileAnalysis dest_analysis) -> void
+
+      # Perform alignment between template and destination statements
+      def align: () -> Array[Hash[Symbol, untyped]]
+
+      private
+
+      # Build a map from signatures to statement indices
+      def build_signature_map: (Array[untyped] statements, FileAnalysis analysis) -> Hash[Array[untyped], Array[Integer]]
+    end
+  end
+end

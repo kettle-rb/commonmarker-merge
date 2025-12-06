@@ -1,0 +1,65 @@
+# Type signatures for Commonmarker::Merge::FreezeNode
+#
+# Represents a frozen block of Markdown content that should be
+# preserved during merges. Marked with HTML comments.
+
+module Commonmarker
+  module Merge
+    class FreezeNode < Ast::Merge::FreezeNode
+      # Regex pattern for HTML comment freeze markers
+      HTML_COMMENT_PATTERN: Regexp
+
+      # Build regex pattern for freeze markers
+      def self.pattern_for: (Symbol pattern_type, ?String? token) -> Regexp
+
+      # Start line number (1-indexed)
+      attr_reader start_line: Integer
+
+      # End line number (1-indexed)
+      attr_reader end_line: Integer
+
+      # Raw Markdown content within the freeze block
+      attr_reader content: String
+
+      # The start marker comment
+      attr_reader start_marker: String
+
+      # The end marker comment
+      attr_reader end_marker: String
+
+      # Parsed nodes within the freeze block
+      attr_reader nodes: Array[untyped]
+
+      # Initialize a new FreezeNode
+      def initialize: (
+        start_line: Integer,
+        end_line: Integer,
+        content: String,
+        start_marker: String,
+        end_marker: String,
+        ?nodes: Array[untyped],
+        ?reason: String?
+      ) -> void
+
+      # Generate a signature for matching this freeze block
+      def signature: () -> Array[Symbol | String]
+
+      # Get the full text including markers
+      def full_text: () -> String
+
+      # Get line count of the freeze block
+      def line_count: () -> Integer
+
+      # Check if block contains a specific node type
+      def contains_type?: (Symbol `type`) -> bool
+
+      # String representation for debugging
+      def inspect: () -> String
+
+      private
+
+      # Extract reason from the start marker comment
+      def extract_reason_from_marker: (String? marker) -> String?
+    end
+  end
+end

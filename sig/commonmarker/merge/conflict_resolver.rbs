@@ -1,0 +1,48 @@
+# Type signatures for Commonmarker::Merge::ConflictResolver
+#
+# Resolves conflicts between matching Markdown elements.
+# Determines which version to use based on configured preference.
+
+module Commonmarker
+  module Merge
+    class ConflictResolver
+      # Decision constants
+      DECISION_DESTINATION: Symbol
+      DECISION_TEMPLATE: Symbol
+      DECISION_ADDED: Symbol
+      DECISION_FROZEN: Symbol
+
+      # Merge preference
+      attr_reader preference: Symbol
+
+      # Template file analysis
+      attr_reader template_analysis: FileAnalysis
+
+      # Destination file analysis
+      attr_reader dest_analysis: FileAnalysis
+
+      # Initialize a conflict resolver
+      def initialize: (
+        preference: Symbol,
+        template_analysis: FileAnalysis,
+        dest_analysis: FileAnalysis
+      ) -> void
+
+      # Resolve a conflict between template and destination nodes
+      def resolve: (
+        untyped template_node,
+        untyped dest_node,
+        template_index: Integer,
+        dest_index: Integer
+      ) -> Hash[Symbol, untyped]
+
+      private
+
+      # Check if two nodes have identical content
+      def content_identical?: (untyped template_node, untyped dest_node) -> bool
+
+      # Convert a node to its source text
+      def node_to_text: (untyped node, FileAnalysis analysis) -> String
+    end
+  end
+end

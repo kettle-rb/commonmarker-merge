@@ -1,0 +1,59 @@
+# Type signatures for Commonmarker::Merge::MergeResult
+#
+# Represents the result of a Markdown merge operation.
+# Contains merged content and metadata about the operation.
+
+module Commonmarker
+  module Merge
+    class MergeResult < Ast::Merge::MergeResult
+      # The merged Markdown content
+      attr_reader content: String?
+
+      # List of conflicts encountered during merge
+      attr_reader conflicts: Array[Hash[Symbol, untyped]]
+
+      # List of frozen blocks preserved during merge
+      attr_reader frozen_blocks: Array[Hash[Symbol, untyped]]
+
+      # Statistics about the merge operation
+      attr_reader stats: Hash[Symbol, untyped]
+
+      # Initialize a new MergeResult
+      def initialize: (
+        content: String?,
+        ?conflicts: Array[Hash[Symbol, untyped]],
+        ?frozen_blocks: Array[Hash[Symbol, untyped]],
+        ?stats: Hash[Symbol, untyped]
+      ) -> void
+
+      # Check if merge was successful
+      def success?: () -> bool
+
+      # Check if there are unresolved conflicts
+      def conflicts?: () -> bool
+
+      # Check if any frozen blocks were preserved
+      def has_frozen_blocks?: () -> bool
+
+      # Get count of nodes added during merge
+      def nodes_added: () -> Integer
+
+      # Get count of nodes removed during merge
+      def nodes_removed: () -> Integer
+
+      # Get count of nodes modified during merge
+      def nodes_modified: () -> Integer
+
+      # Get count of frozen blocks preserved
+      def frozen_count: () -> Integer
+
+      # String representation for debugging
+      def inspect: () -> String
+
+      private
+
+      # Default statistics hash
+      def default_stats: () -> Hash[Symbol, untyped]
+    end
+  end
+end

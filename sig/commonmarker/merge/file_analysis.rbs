@@ -1,0 +1,95 @@
+# Type signatures for Commonmarker::Merge::FileAnalysis
+#
+# File analysis for Markdown files using CommonMarker.
+# Parses Markdown and extracts block elements and freeze blocks.
+
+module Commonmarker
+  module Merge
+    class FileAnalysis
+      # Default freeze token for identifying freeze blocks
+      DEFAULT_FREEZE_TOKEN: String
+
+      # The root document node
+      attr_reader document: untyped
+
+      # Source Markdown content
+      attr_reader source: String
+
+      # Lines of source code
+      attr_reader lines: Array[String]
+
+      # Token used to mark freeze blocks
+      attr_reader freeze_token: String
+
+      # Custom signature generator
+      attr_reader signature_generator: (^(untyped) -> (Array[untyped] | nil | untyped))?
+
+      # All statements (nodes and freeze blocks)
+      attr_reader statements: Array[untyped]
+
+      # Initialize file analysis
+      def initialize: (
+        String source,
+        ?freeze_token: String,
+        ?signature_generator: (^(untyped) -> (Array[untyped] | nil | untyped))?,
+        ?options: Hash[Symbol, untyped]
+      ) -> void
+
+      # Check if parse was successful
+      def valid?: () -> bool
+
+      # Get freeze blocks
+      def freeze_blocks: () -> Array[FreezeNode]
+
+      # Get a specific line (1-indexed)
+      def line_at: (Integer line_number) -> String?
+
+      # Get a normalized line
+      def normalized_line: (Integer line_number) -> String?
+
+      # Get signature at index
+      def signature_at: (Integer index) -> Array[untyped]?
+
+      # Generate signature for a node
+      def generate_signature: (untyped node) -> Array[untyped]?
+
+      # Compute default signature for a node
+      def compute_node_signature: (untyped node) -> Array[untyped]?
+
+      # Compute signature for CommonMarker node
+      def compute_commonmarker_signature: (untyped node) -> Array[untyped]?
+
+      # Extract all text content from a node
+      def extract_text_content: (untyped node) -> String
+
+      # Get source text for a range of lines
+      def source_range: (Integer start_line, Integer end_line) -> String
+
+      private
+
+      # Count children of a node
+      def count_children: (untyped node) -> Integer
+
+      # Get node name
+      def node_name: (untyped node) -> String?
+
+      # Extract all nodes and integrate freeze blocks
+      def extract_and_integrate_all_nodes: () -> Array[untyped]
+
+      # Collect top-level nodes from document
+      def collect_top_level_nodes: () -> Array[untyped]
+
+      # Find freeze markers in source
+      def find_freeze_markers: () -> Array[Hash[Symbol, untyped]]
+
+      # Build freeze blocks from markers
+      def build_freeze_blocks: (Array[Hash[Symbol, untyped]] markers) -> Array[FreezeNode]
+
+      # Create a freeze block from start and end markers
+      def create_freeze_block: (Hash[Symbol, untyped] start_marker, Hash[Symbol, untyped] end_marker) -> FreezeNode
+
+      # Integrate nodes with freeze blocks
+      def integrate_nodes_with_freeze_blocks: (Array[FreezeNode] freeze_blocks) -> Array[untyped]
+    end
+  end
+end
