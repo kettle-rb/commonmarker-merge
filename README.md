@@ -70,14 +70,14 @@ CommonMarker AST nodes and comparing structural elements. It supports:
 
 | Gem | File Type | Parser |
 |-----|-----------|--------|
-| [ast-merge](https://github.com/kettle-rb/ast-merge) | Generic AST | Base Library |
+| [ast-merge](https://github.com/kettle-rb/ast-merge) | Text | internal |
 | [prism-merge](https://github.com/kettle-rb/prism-merge) | Ruby | Prism |
 | [psych-merge](https://github.com/kettle-rb/psych-merge) | YAML | Psych |
-| [json-merge](https://github.com/kettle-rb/json-merge) | JSON | JSON |
-| [jsonc-merge](https://github.com/kettle-rb/jsonc-merge) | JSONC | JSON-Next |
+| [json-merge](https://github.com/kettle-rb/json-merge) | JSON | tree-sitter-json |
+| [jsonc-merge](https://github.com/kettle-rb/jsonc-merge) | JSONC | ⚠️ [tree-sitter-jsonc](https://gitlab.com/WhyNotHugo/tree-sitter-jsonc) (PoC) |
 | [bash-merge](https://github.com/kettle-rb/bash-merge) | Shell | tree-sitter-bash |
 | [rbs-merge](https://github.com/kettle-rb/rbs-merge) | RBS Types | RBS |
-| [dotenv-merge](https://github.com/kettle-rb/dotenv-merge) | Dotenv | dotenv |
+| [dotenv-merge](https://github.com/kettle-rb/dotenv-merge) | Dotenv | internal ([dotenv](https://github.com/bkeepers/dotenv)) |
 | [markly-merge](https://github.com/kettle-rb/markly-merge) | Markdown | Markly (cmark-gfm) |
 | **commonmarker-merge** | Markdown | Commonmarker (Comrak) |
 | [toml-merge](https://github.com/kettle-rb/toml-merge) | TOML | tree-sitter-toml |
