@@ -237,7 +237,7 @@ RSpec.describe "Branch Coverage Integration" do
         merger = Commonmarker::Merge::SmartMerger.new(
           template_md,
           dest_md,
-          signature_match_preference: :template,
+          preference: :template,
         )
 
         result = merger.merge_result

@@ -280,14 +280,14 @@ Control how conflicts between template and destination are resolved:
 merger = Commonmarker::Merge::SmartMerger.new(
   template,
   destination,
-  signature_match_preference: :destination,
+  preference: :destination,
 )
 
 # Apply template updates (overwrite destination)
 merger = Commonmarker::Merge::SmartMerger.new(
   template,
   destination,
-  signature_match_preference: :template,
+  preference: :template,
 )
 
 # Add new sections from template that don't exist in destination

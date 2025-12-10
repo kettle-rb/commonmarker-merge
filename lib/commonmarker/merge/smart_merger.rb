@@ -24,7 +24,7 @@ module Commonmarker
     #   merger = SmartMerger.new(
     #     template_content,
     #     dest_content,
-    #     signature_match_preference: :template,
+    #     preference: :template,
     #     add_template_only_nodes: true
     #   )
     #   result = merger.merge
@@ -71,7 +71,7 @@ module Commonmarker
       #   - `nil` to indicate the node should have no signature
       #   - The original node to fall through to default signature computation
       #
-      # @param signature_match_preference [Symbol] Controls which version to use when nodes
+      # @param preference [Symbol] Controls which version to use when nodes
       #   have matching signatures but different content:
       #   - `:destination` (default) - Use destination version (preserves customizations)
       #   - `:template` - Use template version (applies updates)
@@ -97,13 +97,13 @@ module Commonmarker
         template_content,
         dest_content,
         signature_generator: nil,
-        signature_match_preference: :destination,
+        preference: :destination,
         add_template_only_nodes: false,
         freeze_token: FileAnalysis::DEFAULT_FREEZE_TOKEN,
         options: {},
         match_refiner: nil
       )
-        @signature_match_preference = signature_match_preference
+        @preference = preference
         @add_template_only_nodes = add_template_only_nodes
         @match_refiner = match_refiner
 
@@ -133,7 +133,7 @@ module Commonmarker
 
         @aligner = FileAligner.new(@template_analysis, @dest_analysis, match_refiner: @match_refiner)
         @resolver = ConflictResolver.new(
-          preference: @signature_match_preference,
+          preference: @preference,
           template_analysis: @template_analysis,
           dest_analysis: @dest_analysis,
         )
