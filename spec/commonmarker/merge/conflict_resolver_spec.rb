@@ -260,7 +260,7 @@ RSpec.describe Commonmarker::Merge::ConflictResolver do
     context "with node without source_position" do
       it "falls back to to_commonmark" do
         node = double("MockNode")
-        allow(node).to receive(:is_a?).with(Commonmarker::Merge::FreezeNode).and_return(false)
+        allow(node).to receive(:is_a?).with(Ast::Merge::FreezeNodeBase).and_return(false)
         allow(node).to receive(:source_position).and_return(nil)
         allow(node).to receive(:to_commonmark).and_return("commonmark output")
 
@@ -272,7 +272,7 @@ RSpec.describe Commonmarker::Merge::ConflictResolver do
     context "with node with incomplete position (missing end line)" do
       it "falls back to to_commonmark" do
         node = double("MockNode")
-        allow(node).to receive(:is_a?).with(Commonmarker::Merge::FreezeNode).and_return(false)
+        allow(node).to receive(:is_a?).with(Ast::Merge::FreezeNodeBase).and_return(false)
         allow(node).to receive(:source_position).and_return({start: {line: 1}})
         allow(node).to receive(:to_commonmark).and_return("fallback output")
 

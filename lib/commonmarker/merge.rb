@@ -7,6 +7,7 @@ require "set"
 
 # Shared merge infrastructure
 require "ast/merge"
+require "markdown/merge"
 
 # This gem
 require_relative "merge/version"
@@ -37,11 +38,11 @@ module Commonmarker
   # @see FreezeNode For understanding freeze block behavior
   module Merge
     # Base error class for Commonmarker::Merge
-    # Inherits from Ast::Merge::Error for consistency across merge gems.
-    class Error < Ast::Merge::Error; end
+    # Inherits from Markdown::Merge::Error for consistency across merge gems.
+    class Error < Markdown::Merge::Error; end
 
     # Raised when a Markdown file has parsing errors.
-    # Inherits from Ast::Merge::ParseError for consistency across merge gems.
+    # Inherits from Markdown::Merge::ParseError for consistency across merge gems.
     #
     # @example Handling parse errors
     #   begin
@@ -50,7 +51,7 @@ module Commonmarker
     #     puts "Markdown syntax error: #{e.message}"
     #     e.errors.each { |error| puts "  #{error}" }
     #   end
-    class ParseError < Ast::Merge::ParseError
+    class ParseError < Markdown::Merge::ParseError
       # @param message [String, nil] Error message (auto-generated if nil)
       # @param content [String, nil] The Markdown source that failed to parse
       # @param errors [Array] Parse errors from Commonmarker
@@ -83,15 +84,18 @@ module Commonmarker
     #   end
     class DestinationParseError < ParseError; end
 
+    # Re-export shared classes from markdown-merge
+    FileAligner = Markdown::Merge::FileAligner
+    ConflictResolver = Markdown::Merge::ConflictResolver
+    MergeResult = Markdown::Merge::MergeResult
+    TableMatchAlgorithm = Markdown::Merge::TableMatchAlgorithm
+    TableMatchRefiner = Markdown::Merge::TableMatchRefiner
+    CodeBlockMerger = Markdown::Merge::CodeBlockMerger
+
     autoload :DebugLogger, "commonmarker/merge/debug_logger"
     autoload :FreezeNode, "commonmarker/merge/freeze_node"
-    autoload :MergeResult, "commonmarker/merge/merge_result"
     autoload :FileAnalysis, "commonmarker/merge/file_analysis"
-    autoload :FileAligner, "commonmarker/merge/file_aligner"
-    autoload :ConflictResolver, "commonmarker/merge/conflict_resolver"
     autoload :SmartMerger, "commonmarker/merge/smart_merger"
-    autoload :TableMatchAlgorithm, "commonmarker/merge/table_match_algorithm"
-    autoload :TableMatchRefiner, "commonmarker/merge/table_match_refiner"
   end
 end
 

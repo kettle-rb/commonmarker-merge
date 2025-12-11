@@ -7,7 +7,7 @@ RSpec.describe Commonmarker::Merge do
 
   describe "Error" do
     it "inherits from Ast::Merge::Error" do
-      expect(described_class::Error.superclass).to eq(Ast::Merge::Error)
+      expect(described_class::Error.ancestors).to include(Ast::Merge::Error)
     end
 
     it "can be raised" do
@@ -21,7 +21,7 @@ RSpec.describe Commonmarker::Merge do
 
   describe "ParseError" do
     it "inherits from Ast::Merge::ParseError" do
-      expect(described_class::ParseError.superclass).to eq(Ast::Merge::ParseError)
+      expect(described_class::ParseError.ancestors).to include(Ast::Merge::ParseError)
     end
 
     it "can be raised with errors array" do

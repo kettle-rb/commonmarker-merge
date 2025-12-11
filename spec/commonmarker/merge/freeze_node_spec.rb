@@ -393,7 +393,7 @@ RSpec.describe Commonmarker::Merge::FreezeNode do
 
   describe "inheritance" do
     it "inherits from Ast::Merge::FreezeNodeBase" do
-      expect(described_class.superclass).to eq(Ast::Merge::FreezeNodeBase)
+      expect(described_class.ancestors).to include(Ast::Merge::FreezeNodeBase)
     end
   end
 

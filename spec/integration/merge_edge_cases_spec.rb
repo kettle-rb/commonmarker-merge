@@ -188,7 +188,7 @@ RSpec.describe "Branch Coverage Integration" do
 
         # Mock a node without source_position
         mock_node = double("MockNode")
-        allow(mock_node).to receive(:is_a?).with(Commonmarker::Merge::FreezeNode).and_return(false)
+        allow(mock_node).to receive(:is_a?).with(Ast::Merge::FreezeNodeBase).and_return(false)
         allow(mock_node).to receive(:source_position).and_return(nil)
         allow(mock_node).to receive(:to_commonmark).and_return("Rendered content")
 

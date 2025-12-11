@@ -2,7 +2,9 @@
 
 module Commonmarker
   module Merge
-    # Orchestrates the smart merge process for Markdown files.
+    # Orchestrates the smart merge process for Markdown files using CommonMarker.
+    #
+    # Extends Markdown::Merge::SmartMergerBase with CommonMarker-specific parsing.
     #
     # Uses FileAnalysis, FileAligner, ConflictResolver, and MergeResult to
     # merge two Markdown files intelligently. Freeze blocks marked with
@@ -44,22 +46,8 @@ module Commonmarker
     #   )
     #
     # @see FileAnalysis
-    # @see FileAligner
-    # @see ConflictResolver
-    # @see MergeResult
-    class SmartMerger
-      # @return [FileAnalysis] Analysis of the template file
-      attr_reader :template_analysis
-
-      # @return [FileAnalysis] Analysis of the destination file
-      attr_reader :dest_analysis
-
-      # @return [FileAligner] Aligner for finding matches and differences
-      attr_reader :aligner
-
-      # @return [ConflictResolver] Resolver for handling conflicting content
-      attr_reader :resolver
-
+    # @see Markdown::Merge::SmartMergerBase
+    class SmartMerger < Markdown::Merge::SmartMergerBase
       # Creates a new SmartMerger for intelligent Markdown file merging.
       #
       # @param template_content [String] Template Markdown source code
@@ -103,187 +91,56 @@ module Commonmarker
         options: {},
         match_refiner: nil
       )
-        @preference = preference
-        @add_template_only_nodes = add_template_only_nodes
-        @match_refiner = match_refiner
-
-        # Parse template
-        begin
-          @template_analysis = FileAnalysis.new(
-            template_content,
-            freeze_token: freeze_token,
-            signature_generator: signature_generator,
-            options: options,
-          )
-        rescue StandardError => e
-          raise TemplateParseError.new(errors: [e])
-        end
-
-        # Parse destination
-        begin
-          @dest_analysis = FileAnalysis.new(
-            dest_content,
-            freeze_token: freeze_token,
-            signature_generator: signature_generator,
-            options: options,
-          )
-        rescue StandardError => e
-          raise DestinationParseError.new(errors: [e])
-        end
-
-        @aligner = FileAligner.new(@template_analysis, @dest_analysis, match_refiner: @match_refiner)
-        @resolver = ConflictResolver.new(
-          preference: @preference,
-          template_analysis: @template_analysis,
-          dest_analysis: @dest_analysis,
+        @options = options
+        super(
+          template_content,
+          dest_content,
+          signature_generator: signature_generator,
+          preference: preference,
+          add_template_only_nodes: add_template_only_nodes,
+          inner_merge_code_blocks: false,
+          freeze_token: freeze_token,
+          match_refiner: match_refiner,
+          options: options,
         )
       end
 
-      # Perform the merge operation and return the merged content as a string.
+      # Create a FileAnalysis instance for CommonMarker parsing.
       #
-      # @return [String] The merged Markdown content
-      def merge
-        merge_result.content
-      end
-
-      # Perform the merge operation and return the full MergeResult object.
-      #
-      # @return [MergeResult] The merge result containing merged content and metadata
-      def merge_result
-        return @merge_result if @merge_result
-
-        start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-
-        alignment = DebugLogger.time("SmartMerger#align") do
-          @aligner.align
-        end
-
-        DebugLogger.debug("Alignment complete", {
-          total_entries: alignment.size,
-          matches: alignment.count { |e| e[:type] == :match },
-          template_only: alignment.count { |e| e[:type] == :template_only },
-          dest_only: alignment.count { |e| e[:type] == :dest_only },
-        })
-
-        merged_parts, stats, frozen_blocks, conflicts = DebugLogger.time("SmartMerger#process") do
-          process_alignment(alignment)
-        end
-
-        end_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-        stats[:merge_time_ms] = ((end_time - start_time) * 1000).round(2)
-
-        @merge_result = MergeResult.new(
-          content: merged_parts.join("\n\n"),
-          conflicts: conflicts,
-          frozen_blocks: frozen_blocks,
-          stats: stats,
+      # @param content [String] Markdown content to analyze
+      # @param options [Hash] Analysis options
+      # @return [FileAnalysis] CommonMarker-specific file analysis
+      def create_file_analysis(content, **opts)
+        FileAnalysis.new(
+          content,
+          freeze_token: opts[:freeze_token],
+          signature_generator: opts[:signature_generator],
+          options: opts[:options] || @options,
         )
       end
 
-      private
-
-      # Process alignment entries and build result
+      # Returns the TemplateParseError class to use.
       #
-      # @param alignment [Array<Hash>] Alignment entries
-      # @return [Array] [merged_parts, stats, frozen_blocks, conflicts]
-      def process_alignment(alignment)
-        merged_parts = []
-        frozen_blocks = []
-        conflicts = []
-        stats = {nodes_added: 0, nodes_removed: 0, nodes_modified: 0}
-
-        alignment.each do |entry|
-          case entry[:type]
-          when :match
-            part, frozen = process_match(entry, stats)
-            merged_parts << part if part
-            frozen_blocks << frozen if frozen
-          when :template_only
-            part = process_template_only(entry, stats)
-            merged_parts << part if part
-          when :dest_only
-            part, frozen = process_dest_only(entry, stats)
-            merged_parts << part if part
-            frozen_blocks << frozen if frozen
-          end
-        end
-
-        [merged_parts, stats, frozen_blocks, conflicts]
+      # @return [Class] Commonmarker::Merge::TemplateParseError
+      def template_parse_error_class
+        TemplateParseError
       end
 
-      # Process a matched node pair
+      # Returns the DestinationParseError class to use.
       #
-      # @param entry [Hash] Alignment entry
-      # @param stats [Hash] Statistics hash to update
-      # @return [Array] [content_string, frozen_block_info]
-      def process_match(entry, stats)
-        resolution = @resolver.resolve(
-          entry[:template_node],
-          entry[:dest_node],
-          template_index: entry[:template_index],
-          dest_index: entry[:dest_index],
-        )
-
-        frozen_info = nil
-
-        content = case resolution[:source]
-        when :template
-          stats[:nodes_modified] += 1 if resolution[:decision] != :identical
-          node_to_source(entry[:template_node], @template_analysis)
-        when :destination
-          if entry[:dest_node].respond_to?(:freeze_node?) && entry[:dest_node].freeze_node?
-            frozen_info = {
-              start_line: entry[:dest_node].start_line,
-              end_line: entry[:dest_node].end_line,
-              reason: entry[:dest_node].reason,
-            }
-          end
-          node_to_source(entry[:dest_node], @dest_analysis)
-        end
-
-        [content, frozen_info]
+      # @return [Class] Commonmarker::Merge::DestinationParseError
+      def destination_parse_error_class
+        DestinationParseError
       end
 
-      # Process a template-only node
-      #
-      # @param entry [Hash] Alignment entry
-      # @param stats [Hash] Statistics hash to update
-      # @return [String, nil] Content string or nil
-      def process_template_only(entry, stats)
-        return unless @add_template_only_nodes
-
-        stats[:nodes_added] += 1
-        node_to_source(entry[:template_node], @template_analysis)
-      end
-
-      # Process a destination-only node
-      #
-      # @param entry [Hash] Alignment entry
-      # @param stats [Hash] Statistics hash to update
-      # @return [Array] [content_string, frozen_block_info]
-      def process_dest_only(entry, stats)
-        frozen_info = nil
-
-        if entry[:dest_node].respond_to?(:freeze_node?) && entry[:dest_node].freeze_node?
-          frozen_info = {
-            start_line: entry[:dest_node].start_line,
-            end_line: entry[:dest_node].end_line,
-            reason: entry[:dest_node].reason,
-          }
-        end
-
-        content = node_to_source(entry[:dest_node], @dest_analysis)
-        [content, frozen_info]
-      end
-
-      # Convert a node to its source text
+      # Convert a node to its source text.
       #
       # @param node [Object] Node to convert
       # @param analysis [FileAnalysis] Analysis for source lookup
       # @return [String] Source text
       def node_to_source(node, analysis)
-        case node
-        when FreezeNode
+        # Check for any FreezeNode type (base class or subclass)
+        if node.is_a?(Ast::Merge::FreezeNodeBase)
           node.full_text
         else
           pos = node.source_position
