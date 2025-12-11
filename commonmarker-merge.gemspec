@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.name = "commonmarker-merge"
   spec.version = gem_version
   spec.authors = ["Peter H. Boling"]
-  spec.email = ["peter.boling@gmail.com"]
+  spec.email = ["floss@galtzo.com"]
 
   spec.summary = "☯️ Intelligent Markdown file merging using Commonmarker AST analysis"
   spec.description = "☯️ Commonmarker::Merge provides smart Markdown file merging using Comrak (Rust) via Commonmarker. It understands document structure including headings, lists, code blocks, and tables. Perfect for merging documentation templates with customized files."
