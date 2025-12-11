@@ -86,6 +86,13 @@ module Commonmarker
         end
       end
 
+      # Override to detect CommonMarker nodes for signature generator fallthrough
+      # @param value [Object] The value to check
+      # @return [Boolean] true if this is a fallthrough node
+      def fallthrough_node?(value)
+        value.is_a?(Commonmarker::Node) || value.is_a?(FreezeNode) || super
+      end
+
       # Compute signature for a CommonMarker node.
       #
       # Signatures determine which nodes match between template and destination.
