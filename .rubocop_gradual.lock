@@ -1,0 +1,62 @@
+{
+  "bin/coverage_branches:2666843168": [
+    [55, 15, 4, "Security/Eval: The use of `eval` is a serious security risk.", 2087429787],
+    [60, 15, 4, "Security/Eval: The use of `eval` is a serious security risk.", 2087429787]
+  ],
+  "sig/commonmarker/merge/debug_logger.rbs:1672220417": [
+    [12, 12, 12, "RBS/Lint/Syntax: expected a token `tAIDENT`, token=`env_var_name` (tLIDENT)", 2264207258]
+  ],
+  "spec/commonmarker/merge/branch_coverage_spec.rb:135530358": [
+    [6, 16, 17, "RSpec/DescribeClass: The first argument to describe should be the class or module being tested.", 4201859935]
+  ],
+  "spec/commonmarker/merge/conflict_resolver_spec.rb:4184510301": [
+    [264, 9, 56, "RSpec/ReceiveMessages: Use `receive_messages` instead of multiple stubs on lines [265].", 2341167545],
+    [265, 9, 70, "RSpec/ReceiveMessages: Use `receive_messages` instead of multiple stubs on lines [264].", 3702131378],
+    [276, 9, 71, "RSpec/ReceiveMessages: Use `receive_messages` instead of multiple stubs on lines [277].", 2112758893],
+    [277, 9, 68, "RSpec/ReceiveMessages: Use `receive_messages` instead of multiple stubs on lines [276].", 3127768710]
+  ],
+  "spec/commonmarker/merge/file_analysis_spec.rb:3917077464": [
+    [361, 13, 14, "RSpec/ContextWording: Context description should match /^when\\b/, /^with\\b/, or /^without\\b/.", 715729317],
+    [373, 13, 17, "RSpec/ContextWording: Context description should match /^when\\b/, /^with\\b/, or /^without\\b/.", 2710454185],
+    [390, 13, 18, "RSpec/ContextWording: Context description should match /^when\\b/, /^with\\b/, or /^without\\b/.", 257739398],
+    [410, 3, 1855, "RSpec/RepeatedExampleGroupDescription: Repeated describe block description on line(s) [624]", 4074768694],
+    [624, 3, 1859, "RSpec/RepeatedExampleGroupDescription: Repeated describe block description on line(s) [410]", 3549109688]
+  ],
+  "spec/commonmarker/merge/freeze_node_spec.rb:1062778174": [
+    [96, 16, 36, "RSpec/ExpectActual: Provide the actual value you are testing to `expect(...)`.", 119225837],
+    [101, 16, 38, "RSpec/ExpectActual: Provide the actual value you are testing to `expect(...)`.", 338630134],
+    [109, 16, 36, "RSpec/ExpectActual: Provide the actual value you are testing to `expect(...)`.", 119225837],
+    [110, 16, 38, "RSpec/ExpectActual: Provide the actual value you are testing to `expect(...)`.", 338630134],
+    [115, 16, 26, "RSpec/ExpectActual: Provide the actual value you are testing to `expect(...)`.", 3103757813],
+    [116, 16, 28, "RSpec/ExpectActual: Provide the actual value you are testing to `expect(...)`.", 1736334830],
+    [117, 16, 36, "RSpec/ExpectActual: Provide the actual value you are testing to `expect(...)`.", 119225837],
+    [122, 16, 26, "RSpec/ExpectActual: Provide the actual value you are testing to `expect(...)`.", 2009558550],
+    [123, 16, 26, "RSpec/ExpectActual: Provide the actual value you are testing to `expect(...)`.", 1174592096],
+    [411, 14, 30, "RSpec/ExpectActual: Provide the actual value you are testing to `expect(...)`.", 896214194],
+    [427, 5, 323, "RSpec/RepeatedExample: Don't repeat examples within an example group. Repeated on line(s) 449.", 4198284258],
+    [449, 5, 328, "RSpec/RepeatedExample: Don't repeat examples within an example group. Repeated on line(s) 427.", 4183356831],
+    [513, 14, 21, "RSpec/ExpectActual: Provide the actual value you are testing to `expect(...)`.", 2695994871]
+  ],
+  "spec/commonmarker/merge/smart_merger_spec.rb:3596713761": [
+    [317, 13, 12, "RSpec/ContextWording: Context description should match /^when\\b/, /^with\\b/, or /^without\\b/.", 1388757216],
+    [783, 15, 64, "RSpec/ContextWording: Context description should match /^when\\b/, /^with\\b/, or /^without\\b/.", 2949871007],
+    [813, 15, 61, "RSpec/ContextWording: Context description should match /^when\\b/, /^with\\b/, or /^without\\b/.", 2310349680],
+    [854, 15, 66, "RSpec/ContextWording: Context description should match /^when\\b/, /^with\\b/, or /^without\\b/.", 2463833010],
+    [892, 15, 63, "RSpec/ContextWording: Context description should match /^when\\b/, /^with\\b/, or /^without\\b/.", 2061871801],
+    [936, 15, 56, "RSpec/ContextWording: Context description should match /^when\\b/, /^with\\b/, or /^without\\b/.", 3931664706],
+    [979, 15, 53, "RSpec/ContextWording: Context description should match /^when\\b/, /^with\\b/, or /^without\\b/.", 791928333],
+    [1027, 15, 78, "RSpec/ContextWording: Context description should match /^when\\b/, /^with\\b/, or /^without\\b/.", 3680529012],
+    [1068, 15, 75, "RSpec/ContextWording: Context description should match /^when\\b/, /^with\\b/, or /^without\\b/.", 1845954687]
+  ],
+  "spec/commonmarker/version_spec.rb:12934052": [
+    [3, 1, 43, "RSpec/SpecFilePathFormat: Spec path should end with `commonmarker/merge/version*_spec.rb`.", 700942716]
+  ],
+  "spec/integration/merge_edge_cases_spec.rb:724728263": [
+    [6, 16, 29, "RSpec/DescribeClass: The first argument to describe should be the class or module being tested.", 2700472225],
+    [192, 9, 61, "RSpec/ReceiveMessages: Use `receive_messages` instead of multiple stubs on lines [193].", 430968428],
+    [193, 9, 74, "RSpec/ReceiveMessages: Use `receive_messages` instead of multiple stubs on lines [192].", 3375468898]
+  ],
+  "spec/integration/reproducible_merge_spec.rb:3217830225": [
+    [6, 16, 33, "RSpec/DescribeClass: The first argument to describe should be the class or module being tested.", 2920830328]
+  ]
+}
