@@ -52,11 +52,7 @@
     [3, 1, 43, "RSpec/SpecFilePathFormat: Spec path should end with `commonmarker/merge/version*_spec.rb`.", 700942716]
   ],
   "spec/integration/merge_edge_cases_spec.rb:724728263": [
-    [6, 16, 29, "RSpec/DescribeClass: The first argument to describe should be the class or module being tested.", 2700472225],
     [192, 9, 61, "RSpec/ReceiveMessages: Use `receive_messages` instead of multiple stubs on lines [193].", 430968428],
     [193, 9, 74, "RSpec/ReceiveMessages: Use `receive_messages` instead of multiple stubs on lines [192].", 3375468898]
-  ],
-  "spec/integration/reproducible_merge_spec.rb:3217830225": [
-    [6, 16, 33, "RSpec/DescribeClass: The first argument to describe should be the class or module being tested.", 2920830328]
   ]
 }
