@@ -81,11 +81,10 @@ Gem::Specification.new do |spec|
   # Listed files are the relative paths from bindir above.
   spec.executables = []
 
-  # Parser and AST infrastructure
+  # Hard dependency on commonmarker parser
   spec.add_dependency("commonmarker", "~> 2.0")                         # ruby >= 3.2.0
 
-  # Shared merge infrastructure
-  spec.add_dependency("ast-merge", "~> 1.0")                            # ruby >= 3.2.0
+  # Shared merge infrastructure (ast-merge and tree_haver are transitive via markdown-merge)
   spec.add_dependency("markdown-merge", "~> 1.0")                       # ruby >= 3.2.0
 
   # Utilities

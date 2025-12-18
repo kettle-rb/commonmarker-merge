@@ -4,16 +4,10 @@ module Commonmarker
   module Merge
     # Orchestrates the smart merge process for Markdown files using CommonMarker.
     #
-    # Extends Markdown::Merge::SmartMergerBase with CommonMarker-specific parsing.
-    #
-    # Uses FileAnalysis, FileAligner, ConflictResolver, and MergeResult to
-    # merge two Markdown files intelligently. Freeze blocks marked with
-    # HTML comments are preserved exactly as-is.
-    #
-    # SmartMerger provides flexible configuration for different merge scenarios:
-    # - Preserve destination customizations (default)
-    # - Apply template updates
-    # - Add new sections from template
+    # This is a thin wrapper around Markdown::Merge::SmartMerger that:
+    # - Forces the :commonmarker backend
+    # - Sets commonmarker-specific defaults (freeze token, inner_merge_code_blocks)
+    # - Exposes commonmarker-specific options (options hash)
     #
     # @example Basic merge (destination customizations preserved)
     #   merger = SmartMerger.new(template_content, dest_content)
@@ -33,7 +27,8 @@ module Commonmarker
     #
     # @example Custom signature matching
     #   sig_gen = ->(node) {
-    #     if node.respond_to?(:type) && node.type == :heading
+    #     canonical_type = Ast::Merge::NodeTyping.merge_type_for(node) || node.type
+    #     if canonical_type == :heading
     #       [:heading, node.header_level]  # Match by level only, not content
     #     else
     #       node  # Fall through to default
@@ -45,16 +40,15 @@ module Commonmarker
     #     signature_generator: sig_gen
     #   )
     #
-    # @see FileAnalysis
-    # @see Markdown::Merge::SmartMergerBase
-    class SmartMerger < Markdown::Merge::SmartMergerBase
+    # @see Markdown::Merge::SmartMerger Underlying implementation
+    class SmartMerger < Markdown::Merge::SmartMerger
       # Creates a new SmartMerger for intelligent Markdown file merging.
       #
       # @param template_content [String] Template Markdown source code
       # @param dest_content [String] Destination Markdown source code
       #
       # @param signature_generator [Proc, nil] Optional proc to generate custom node signatures.
-      #   The proc receives a Commonmarker::Node and should return one of:
+      #   The proc receives a node (wrapped with canonical merge_type) and should return one of:
       #   - An array representing the node's signature
       #   - `nil` to indicate the node should have no signature
       #   - The original node to fall through to default signature computation
@@ -87,35 +81,21 @@ module Commonmarker
         signature_generator: nil,
         preference: :destination,
         add_template_only_nodes: false,
-        freeze_token: FileAnalysis::DEFAULT_FREEZE_TOKEN,
+        freeze_token: DEFAULT_FREEZE_TOKEN,
         options: {},
         match_refiner: nil
       )
-        @options = options
         super(
           template_content,
           dest_content,
+          backend: :commonmarker,
           signature_generator: signature_generator,
           preference: preference,
           add_template_only_nodes: add_template_only_nodes,
-          inner_merge_code_blocks: false,
+          inner_merge_code_blocks: DEFAULT_INNER_MERGE_CODE_BLOCKS,
           freeze_token: freeze_token,
           match_refiner: match_refiner,
           options: options,
-        )
-      end
-
-      # Create a FileAnalysis instance for CommonMarker parsing.
-      #
-      # @param content [String] Markdown content to analyze
-      # @param options [Hash] Analysis options
-      # @return [FileAnalysis] CommonMarker-specific file analysis
-      def create_file_analysis(content, **opts)
-        FileAnalysis.new(
-          content,
-          freeze_token: opts[:freeze_token],
-          signature_generator: opts[:signature_generator],
-          options: opts[:options] || @options,
         )
       end
 
@@ -133,24 +113,18 @@ module Commonmarker
         DestinationParseError
       end
 
-      # Convert a node to its source text.
+      # Create a FileAnalysis instance for parsing.
       #
-      # @param node [Object] Node to convert
-      # @param analysis [FileAnalysis] Analysis for source lookup
-      # @return [String] Source text
-      def node_to_source(node, analysis)
-        # Check for any FreezeNode type (base class or subclass)
-        if node.is_a?(Ast::Merge::FreezeNodeBase)
-          node.full_text
-        else
-          pos = node.source_position
-          start_line = pos&.dig(:start_line)
-          end_line = pos&.dig(:end_line)
-
-          return node.to_commonmark unless start_line && end_line
-
-          analysis.source_range(start_line, end_line)
-        end
+      # @param content [String] Markdown content to analyze
+      # @param options [Hash] Analysis options
+      # @return [Commonmarker::Merge::FileAnalysis] File analysis instance
+      def create_file_analysis(content, **opts)
+        FileAnalysis.new(
+          content,
+          freeze_token: opts[:freeze_token],
+          signature_generator: opts[:signature_generator],
+          options: opts[:options] || {},
+        )
       end
     end
   end

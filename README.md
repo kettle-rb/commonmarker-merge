@@ -54,8 +54,13 @@
 
 ## 🌻 Synopsis
 
-`commonmarker-merge` provides intelligent merging of Markdown files by parsing them into
-CommonMarker AST nodes and comparing structural elements. It supports:
+`commonmarker-merge` is a thin wrapper around [markdown-merge](https://github.com/kettle-rb/markdown-merge) that provides:
+
+- **Hard dependency on Commonmarker** - Ensures the Comrak (Rust) parser is installed
+- **Commonmarker-specific defaults** - Freeze token: `"commonmarker-merge"`, `inner_merge_code_blocks: false`
+- **CommonMarker parse options** - Pass options via the `options:` parameter
+
+### Features (via markdown-merge)
 
 - **Smart element matching** - Headings, paragraphs, lists, code blocks, and other block elements
   are matched by their structural signatures
@@ -64,6 +69,7 @@ CommonMarker AST nodes and comparing structural elements. It supports:
 - **Freeze blocks** - Mark sections with HTML comments to preserve them during merges
 - **Configurable merge strategies** - Choose whether template or destination wins for conflicts,
   or use a Hash for per-node-type preferences with `node_splitter` (see [ast-merge](https://github.com/kettle-rb/ast-merge) docs)
+- **Type normalization** - Canonical node types work across all markdown backends
 - **Full CommonMarker support** - Works with all CommonMark and GitHub Flavored Markdown extensions
 
 ### Part of a gem family
@@ -79,7 +85,7 @@ CommonMarker AST nodes and comparing structural elements. It supports:
 | [rbs-merge](https://github.com/kettle-rb/rbs-merge) | RBS Types | RBS |
 | [dotenv-merge](https://github.com/kettle-rb/dotenv-merge) | Dotenv | internal ([dotenv](https://github.com/bkeepers/dotenv)) |
 | [toml-merge](https://github.com/kettle-rb/toml-merge) | TOML | tree-sitter-toml |
-| [markdown-merge](https://github.com/kettle-rb/markdown-merge) | Markdown | _base classes_ |
+| [markdown-merge](https://github.com/kettle-rb/markdown-merge) | Markdown | tree_haver (multiple backends) |
 | [markly-merge](https://github.com/kettle-rb/markly-merge) | Markdown | Markly (cmark-gfm) |
 | **commonmarker-merge** | Markdown | Commonmarker (Comrak) |
 

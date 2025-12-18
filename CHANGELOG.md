@@ -20,8 +20,6 @@ Please file a bug if you notice a violation of semantic versioning.
 
 ### Added
 
-- Initial release
-
 ### Changed
 
 ### Deprecated
@@ -31,6 +29,30 @@ Please file a bug if you notice a violation of semantic versioning.
 ### Fixed
 
 ### Security
+
+## [1.0.0] - 2024-12-17
+
+### Added
+
+- Initial release of commonmarker-merge
+- Thin wrapper around `markdown-merge` for Commonmarker backend
+- `Commonmarker::Merge::SmartMerger` - smart merging with commonmarker defaults
+  - Default freeze token: `"commonmarker-merge"`
+  - Default `inner_merge_code_blocks: false`
+- `Commonmarker::Merge::FileAnalysis` - file analysis with commonmarker backend
+- `Commonmarker::Merge::FreezeNode` - freeze block support
+- Commonmarker-specific parse options via `options:` parameter
+- Error classes: `Error`, `ParseError`, `TemplateParseError`, `DestinationParseError`
+- Re-exports shared classes from markdown-merge:
+  - `FileAligner`, `ConflictResolver`, `MergeResult`
+  - `TableMatchAlgorithm`, `TableMatchRefiner`, `CodeBlockMerger`
+  - `NodeTypeNormalizer`
+
+### Dependencies
+
+- `commonmarker` (~> 2.0) - Comrak Rust parser
+- `markdown-merge` (~> 1.0) - central merge infrastructure
+- `version_gem` (~> 1.1)
 
 [Unreleased]: https://github.com/kettle-rb/commonmarker-merge/compare/v1.0.0...HEAD
 [1.0.0]: https://github.com/kettle-rb/commonmarker-merge/compare/12d4e9fff5bbe6a9b29e81c6643b4dd705f8e80a...v1.0.0

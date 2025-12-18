@@ -555,7 +555,7 @@ RSpec.describe Commonmarker::Merge::FileAnalysis do
       it "generates signature for thematic break" do
         analysis = described_class.new(source)
         # Find the thematic break
-        thematic = analysis.statements.find { |s| s.type == :thematic_break }
+        thematic = analysis.statements.find { |s| s.respond_to?(:merge_type) && s.merge_type == :thematic_break }
         expect(thematic).not_to be_nil
         sig = analysis.generate_signature(thematic)
         expect(sig).to eq([:thematic_break])
