@@ -73,6 +73,9 @@ module Commonmarker
       #   unmatched nodes. Default: nil (fuzzy matching disabled).
       #   Set to TableMatchRefiner.new to enable fuzzy table matching.
       #
+      # @param node_typing [Hash{Symbol,String => #call}, nil] Node typing configuration
+      #   for per-node-type merge preferences.
+      #
       # @raise [TemplateParseError] If template has syntax errors
       # @raise [DestinationParseError] If destination has syntax errors
       def initialize(
@@ -83,7 +86,8 @@ module Commonmarker
         add_template_only_nodes: false,
         freeze_token: DEFAULT_FREEZE_TOKEN,
         options: {},
-        match_refiner: nil
+        match_refiner: nil,
+        node_typing: nil
       )
         super(
           template_content,
@@ -95,6 +99,7 @@ module Commonmarker
           inner_merge_code_blocks: DEFAULT_INNER_MERGE_CODE_BLOCKS,
           freeze_token: freeze_token,
           match_refiner: match_refiner,
+          node_typing: node_typing,
           options: options,
         )
       end
