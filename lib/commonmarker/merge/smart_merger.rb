@@ -75,6 +75,7 @@ module Commonmarker
       #
       # @param node_typing [Hash{Symbol,String => #call}, nil] Node typing configuration
       #   for per-node-type merge preferences.
+      # @param extra_options [Hash] Additional options for forward compatibility
       #
       # @raise [TemplateParseError] If template has syntax errors
       # @raise [DestinationParseError] If destination has syntax errors
@@ -87,7 +88,8 @@ module Commonmarker
         freeze_token: DEFAULT_FREEZE_TOKEN,
         options: {},
         match_refiner: nil,
-        node_typing: nil
+        node_typing: nil,
+        **extra_options
       )
         super(
           template_content,
@@ -101,6 +103,7 @@ module Commonmarker
           match_refiner: match_refiner,
           node_typing: node_typing,
           options: options,
+          **extra_options
         )
       end
 
