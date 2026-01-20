@@ -6,13 +6,31 @@
 module Commonmarker
   module Merge
     module DebugLogger
-      extend Ast::Merge::DebugLogger
-
       # Configured environment variable name
-      self.env_var_name: String
+      def self.env_var_name: () -> String
+      def self.env_var_name=: (String) -> String
 
       # Configured log prefix
-      self.log_prefix: String
+      def self.log_prefix: () -> String
+      def self.log_prefix=: (String) -> String
+
+      # Check if debug mode is enabled
+      def self.enabled?: () -> bool
+
+      # Log a debug message with optional context
+      def self.debug: (String message, ?Hash[Symbol, untyped] context) -> void
+
+      # Log an info message
+      def self.info: (String message) -> void
+
+      # Log a warning message
+      def self.warning: (String message) -> void
+
+      # Time a block and log the duration
+      def self.time: [T] (String operation) { () -> T } -> T
+
+      # Extract node information for logging
+      def self.extract_node_info: (untyped node) -> Hash[Symbol, untyped]
     end
   end
 end

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "spec_helper"
+
 # Integration tests specifically designed to cover uncovered branches
 # in commonmarker-merge components.
 
@@ -164,10 +166,11 @@ RSpec.describe "Branch Coverage Integration" do
           dest_analysis: dest_analysis,
         )
 
-        t_stmt = template_analysis.statements[1] # paragraph
-        d_stmt = dest_analysis.statements[1] # paragraph
+        # Index 0 = heading, 1 = gap_line, 2 = paragraph
+        t_stmt = template_analysis.statements[2] # paragraph
+        d_stmt = dest_analysis.statements[2] # paragraph
 
-        result = resolver.resolve(t_stmt, d_stmt, template_index: 1, dest_index: 1)
+        result = resolver.resolve(t_stmt, d_stmt, template_index: 2, dest_index: 2)
         expect(result[:source]).to eq(:template)
         expect(result[:decision]).to eq(Commonmarker::Merge::ConflictResolver::DECISION_TEMPLATE)
       end
@@ -188,9 +191,10 @@ RSpec.describe "Branch Coverage Integration" do
 
         # Mock a node without source_position
         mock_node = double("MockNode")
-        allow(mock_node).to receive(:is_a?).with(Ast::Merge::FreezeNodeBase).and_return(false)
-        allow(mock_node).to receive(:source_position).and_return(nil)
-        allow(mock_node).to receive(:to_commonmark).and_return("Rendered content")
+        allow(mock_node).to receive_messages(
+          source_position: nil,
+          to_commonmark: "Rendered content",
+        )
 
         # Access private method for testing
         text = resolver.send(:node_to_text, mock_node, template_analysis)

@@ -6,6 +6,19 @@ inherit_from:
 
 plugins: rubocop-on-rbs
 
+AllCops:
+  Exclude:
+    - certs/**/*
+    - checksums/**/*
+    - docs/**/*
+    - fixtures/**/*
+    - gemfiles/*.gemfile
+    - pkg/**/*
+    - results/**/*
+    - spec/fixtures/**/*
+    - tmp/**/*
+    - vendor/**/*
+
 RBS:
   Enabled: true
 

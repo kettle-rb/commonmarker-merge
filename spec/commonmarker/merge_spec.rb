@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "spec_helper"
+
 RSpec.describe Commonmarker::Merge do
   it "has a version number" do
     expect(Commonmarker::Merge::VERSION).not_to be_nil

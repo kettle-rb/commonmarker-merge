@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "spec_helper"
 require "ast/merge/rspec/shared_examples"
 
 RSpec.describe Commonmarker::Merge::ConflictResolver do
@@ -84,9 +85,9 @@ RSpec.describe Commonmarker::Merge::ConflictResolver do
   end
 
   describe "#resolve" do
-    # Use the paragraph (index 1) which has different content
-    let(:template_node) { template_analysis.statements[1] }
-    let(:dest_node) { dest_analysis.statements[1] }
+    # Use the paragraph (index 2 after gap_line at index 1) which has different content
+    let(:template_node) { template_analysis.statements[2] }
+    let(:dest_node) { dest_analysis.statements[2] }
 
     context "with :destination preference" do
       let(:resolver) do
@@ -260,9 +261,10 @@ RSpec.describe Commonmarker::Merge::ConflictResolver do
     context "with node without source_position" do
       it "falls back to to_commonmark" do
         node = double("MockNode")
-        allow(node).to receive(:is_a?).with(Ast::Merge::FreezeNodeBase).and_return(false)
-        allow(node).to receive(:source_position).and_return(nil)
-        allow(node).to receive(:to_commonmark).and_return("commonmark output")
+        allow(node).to receive_messages(
+          source_position: nil,
+          to_commonmark: "commonmark output",
+        )
 
         result = resolver.send(:node_to_text, node, template_analysis)
         expect(result).to eq("commonmark output")
@@ -272,9 +274,10 @@ RSpec.describe Commonmarker::Merge::ConflictResolver do
     context "with node with incomplete position (missing end line)" do
       it "falls back to to_commonmark" do
         node = double("MockNode")
-        allow(node).to receive(:is_a?).with(Ast::Merge::FreezeNodeBase).and_return(false)
-        allow(node).to receive(:source_position).and_return({start: {line: 1}})
-        allow(node).to receive(:to_commonmark).and_return("fallback output")
+        allow(node).to receive_messages(
+          source_position: {start: {line: 1}},
+          to_commonmark: "fallback output",
+        )
 
         result = resolver.send(:node_to_text, node, template_analysis)
         expect(result).to eq("fallback output")
@@ -299,6 +302,49 @@ RSpec.describe Commonmarker::Merge::ConflictResolver do
         result = resolver.send(:node_to_text, node, template_analysis)
         expect(result).to be_a(String)
         expect(result.length).to be > 0
+      end
+    end
+
+    describe "#node_to_text edge cases" do
+      # Line 115: then branch - when start_line && end_line exist
+      let(:template_analysis) do
+        Commonmarker::Merge::FileAnalysis.new("# Test\n\nParagraph text here.\n")
+      end
+      let(:dest_analysis) do
+        Commonmarker::Merge::FileAnalysis.new("# Test\n\nDifferent text here.\n")
+      end
+
+      context "when node has valid source position" do
+        it "uses source_range for text extraction" do
+          resolver = described_class.new(
+            preference: :destination,
+            template_analysis: template_analysis,
+            dest_analysis: dest_analysis,
+          )
+
+          template_node = template_analysis.statements.first
+          dest_node = dest_analysis.statements.first
+
+          resolution = resolver.resolve(template_node, dest_node, template_index: 0, dest_index: 0)
+          expect(resolution).to be_a(Hash)
+          expect(resolution[:source]).to be_a(Symbol)
+        end
+      end
+
+      context "with template preference" do
+        it "prefers template when configured" do
+          resolver = described_class.new(
+            preference: :template,
+            template_analysis: template_analysis,
+            dest_analysis: dest_analysis,
+          )
+
+          template_node = template_analysis.statements[2]  # paragraph (index 0=heading, 1=gap, 2=paragraph)
+          dest_node = dest_analysis.statements[2]  # paragraph
+
+          resolution = resolver.resolve(template_node, dest_node, template_index: 2, dest_index: 2)
+          expect(resolution[:source]).to eq(:template)
+        end
       end
     end
   end
