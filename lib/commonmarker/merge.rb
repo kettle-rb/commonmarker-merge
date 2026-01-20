@@ -76,7 +76,31 @@ module Commonmarker
     autoload :FreezeNode, "commonmarker/merge/freeze_node"
     autoload :FileAnalysis, "commonmarker/merge/file_analysis"
     autoload :SmartMerger, "commonmarker/merge/smart_merger"
+    autoload :Backend, "commonmarker/merge/backend"
+
+    class << self
+      # Eagerly load and register backend when this module is loaded
+      # This ensures the backend is available for tree_haver before any parsing happens
+      def ensure_backend_loaded!
+        Backend # Access constant to trigger autoload
+      end
+    end
   end
+end
+
+# Ensure backend is loaded and registered
+Commonmarker::Merge.ensure_backend_loaded!
+
+# Register with ast-merge's MergeGemRegistry for RSpec dependency tags
+# Only register if MergeGemRegistry is loaded (i.e., in test environment)
+if defined?(Ast::Merge::RSpec::MergeGemRegistry)
+  Ast::Merge::RSpec::MergeGemRegistry.register(
+    :commonmarker_merge,
+    require_path: "commonmarker/merge",
+    merger_class: "Commonmarker::Merge::SmartMerger",
+    test_source: "# Test\n\nParagraph",
+    category: :markdown,
+  )
 end
 
 Commonmarker::Merge::Version.class_eval do

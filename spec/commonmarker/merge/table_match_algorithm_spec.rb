@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "spec_helper"
+
 RSpec.describe Commonmarker::Merge::TableMatchAlgorithm do
   subject(:algorithm) { described_class.new(**options) }
 
