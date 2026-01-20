@@ -20,6 +20,25 @@ Please file a bug if you notice a violation of semantic versioning.
 
 ### Added
 
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [1.0.0] - 2026-01-20
+
+- TAG: [v1.0.0][1.0.0t]
+- COVERAGE: 100.00% -- 9/9 lines in 2 files
+- BRANCH COVERAGE: 0.00% -- 0/0 branches in 2 files
+- 86.44% documented
+
+### Added
+
 - [tree_haver v5.0.2](https://github.com/kettle-rb/tree_haver/releases/tag/v5.0.2)
 - [ast-merge v4.0.3](https://github.com/kettle-rb/ast-merge/releases/tag/v4.0.3)
 - [markdown-merge v1.0.1](https://github.com/kettle-rb/markdown-merge/releases/tag/v1.0.1)
@@ -54,16 +73,6 @@ Please file a bug if you notice a violation of semantic versioning.
 - **SmartMerger**: Added `**extra_options` for forward compatibility
   - Accepts additional options that may be added to base class in future
   - Passes all options through to `Markdown::Merge::SmartMerger`
-
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
 
 ### Dependencies
 
