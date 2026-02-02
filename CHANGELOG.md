@@ -22,6 +22,8 @@ Please file a bug if you notice a violation of semantic versioning.
 
 ### Changed
 
+- Updated documentation on Ruby version support
+
 ### Deprecated
 
 ### Removed

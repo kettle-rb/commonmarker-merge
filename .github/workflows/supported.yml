@@ -52,7 +52,7 @@ jobs:
             rubygems: latest
             bundler: latest
 
-          # Ruby 3.3
+          # Ruby 3.4
           - ruby: "ruby-3.4"
             appraisal: "current"
             exec_cmd: "rake test"
