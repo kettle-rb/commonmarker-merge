@@ -20,28 +20,9 @@ Please file a bug if you notice a violation of semantic versioning.
 
 ### Added
 
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
-
-## [1.0.0] - 2026-01-20
-
-- TAG: [v1.0.0][1.0.0t]
-- COVERAGE: 100.00% -- 9/9 lines in 2 files
-- BRANCH COVERAGE: 0.00% -- 0/0 branches in 2 files
-- 86.44% documented
-
-### Added
-
-- [tree_haver v5.0.2](https://github.com/kettle-rb/tree_haver/releases/tag/v5.0.2)
-- [ast-merge v4.0.3](https://github.com/kettle-rb/ast-merge/releases/tag/v4.0.3)
-- [markdown-merge v1.0.1](https://github.com/kettle-rb/markdown-merge/releases/tag/v1.0.1)
+- [tree_haver v5.0.3](https://github.com/kettle-rb/tree_haver/releases/tag/v5.0.3)
+- [ast-merge v4.0.5](https://github.com/kettle-rb/ast-merge/releases/tag/v4.0.5)
+- [markdown-merge v1.0.2](https://github.com/kettle-rb/markdown-merge/releases/tag/v1.0.2)
 - Thin wrapper around `markdown-merge` for Commonmarker backend
 - `Commonmarker::Merge::SmartMerger` - smart merging with commonmarker defaults
   - Default freeze token: `"commonmarker-merge"`
@@ -74,11 +55,21 @@ Please file a bug if you notice a violation of semantic versioning.
   - Accepts additional options that may be added to base class in future
   - Passes all options through to `Markdown::Merge::SmartMerger`
 
-### Dependencies
+#### Dependencies
 
 - `commonmarker` (~> 2.0) - Comrak Rust parser
 - `markdown-merge` (~> 1.0) - central merge infrastructure for markdown
 - `version_gem` (~> 1.1)
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
 
 [Unreleased]: https://github.com/kettle-rb/commonmarker-merge/compare/v1.0.0...HEAD
 [1.0.0]: https://github.com/kettle-rb/commonmarker-merge/compare/12d4e9fff5bbe6a9b29e81c6643b4dd705f8e80a...v1.0.0
