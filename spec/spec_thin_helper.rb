@@ -1,15 +1,5 @@
 # frozen_string_literal: true
 
-# External gems/libs
-require "securerandom"
-
-# External RSpec & related config
-require "kettle/test/rspec"
-
-# Internal ENV config
-require_relative "config/debug"
-require_relative "config/tree_haver"
-
 # Config for development dependencies of this library
 # i.e., not configured by this library
 #
@@ -24,10 +14,20 @@ rescue LoadError => error
   raise error unless error.message.include?("kettle")
 end
 
+# External gems/libs
+require "securerandom"
+
+# External RSpec & related config
+require "kettle/test/rspec"
+
+# Internal ENV config
+require_relative "config/debug"
+require_relative "config/tree_haver"
+
 # this library
 require "commonmarker/merge"
 
-# Support files (dependency tags loaded here - AFTER library so TreeHaver is available)
+# Support files
 Dir[File.join(__dir__, "support", "**", "*.rb")].each { |f| require f }
 
 RSpec.configure do |config|
