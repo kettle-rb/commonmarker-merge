@@ -33,7 +33,7 @@ PATH
   specs:
     commonmarker-merge (1.0.0)
       commonmarker (~> 2.0)
-      markdown-merge (~> 1.0, >= 1.0.1)
+      markdown-merge (~> 1.0, >= 1.0.2)
       version_gem (~> 1.1, >= 1.1.9)
 
 GEM

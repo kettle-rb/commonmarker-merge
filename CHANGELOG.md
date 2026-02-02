@@ -20,6 +20,25 @@ Please file a bug if you notice a violation of semantic versioning.
 
 ### Added
 
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [1.0.0] - 2026-02-01
+
+- TAG: [v1.0.0][1.0.0t]
+- COVERAGE: 86.52% -- 154/178 lines in 7 files
+- BRANCH COVERAGE: 47.73% -- 21/44 branches in 7 files
+- 86.44% documented
+
+### Added
+
 - [tree_haver v5.0.3](https://github.com/kettle-rb/tree_haver/releases/tag/v5.0.3)
 - [ast-merge v4.0.5](https://github.com/kettle-rb/ast-merge/releases/tag/v4.0.5)
 - [markdown-merge v1.0.2](https://github.com/kettle-rb/markdown-merge/releases/tag/v1.0.2)
@@ -60,14 +79,6 @@ Please file a bug if you notice a violation of semantic versioning.
 - `commonmarker` (~> 2.0) - Comrak Rust parser
 - `markdown-merge` (~> 1.0) - central merge infrastructure for markdown
 - `version_gem` (~> 1.1)
-
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
 
 ### Security
 
