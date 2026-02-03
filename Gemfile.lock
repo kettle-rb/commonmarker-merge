@@ -31,7 +31,7 @@ GIT
 PATH
   remote: .
   specs:
-    commonmarker-merge (1.0.0)
+    commonmarker-merge (1.0.1)
       ast-merge (~> 4.0, >= 4.0.5)
       commonmarker (~> 2.0)
       markdown-merge (~> 1.0, >= 1.0.2)
@@ -427,7 +427,7 @@ CHECKSUMS
   citrus (3.0.2) sha256=4ec2412fc389ad186735f4baee1460f7900a8e130ffe3f216b30d4f9c684f650
   commonmarker (2.6.3-arm-linux) sha256=62b9f32d7d3f85d47988a4a98a2e66e60ca42b894687047db8332f1e80caff7b
   commonmarker (2.6.3-x86_64-linux) sha256=e861ba1812721113725ebd8e46e4fee20dc732842f5555db2cfb8dcd74056583
-  commonmarker-merge (1.0.0)
+  commonmarker-merge (1.0.1)
   concurrent-ruby (1.3.6) sha256=6b56837e1e7e5292f9864f34b69c5a2cbc75c0cf5338f1ce9903d10fa762d5ab
   date (3.5.1) sha256=750d06384d7b9c15d562c76291407d89e368dda4d4fff957eb94962d325a0dc0
   debug (1.11.1) sha256=2e0b0ac6119f2207a6f8ac7d4a73ca8eb4e440f64da0a3136c30343146e952b6

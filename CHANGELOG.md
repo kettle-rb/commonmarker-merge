@@ -22,9 +22,6 @@ Please file a bug if you notice a violation of semantic versioning.
 
 ### Changed
 
-- ast-merge, tree_haver as direct dependencies
-- Updated documentation on Ruby version support
-
 ### Deprecated
 
 ### Removed
@@ -32,6 +29,18 @@ Please file a bug if you notice a violation of semantic versioning.
 ### Fixed
 
 ### Security
+
+## [1.0.1] - 2026-02-02
+
+- TAG: [v1.0.1][1.0.1t]
+- COVERAGE: 86.52% -- 154/178 lines in 7 files
+- BRANCH COVERAGE: 47.73% -- 21/44 branches in 7 files
+- 86.44% documented
+
+### Changed
+
+- ast-merge, tree_haver as direct dependencies
+- Updated documentation on Ruby version support
 
 ## [1.0.0] - 2026-02-01
 
@@ -85,6 +94,8 @@ Please file a bug if you notice a violation of semantic versioning.
 
 ### Security
 
-[Unreleased]: https://github.com/kettle-rb/commonmarker-merge/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/kettle-rb/commonmarker-merge/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/kettle-rb/commonmarker-merge/compare/v1.0.0...v1.0.1
+[1.0.1t]: https://github.com/kettle-rb/commonmarker-merge/releases/tag/v1.0.1
 [1.0.0]: https://github.com/kettle-rb/commonmarker-merge/compare/12d4e9fff5bbe6a9b29e81c6643b4dd705f8e80a...v1.0.0
 [1.0.0t]: https://github.com/kettle-rb/commonmarker-merge/tags/v1.0.0
