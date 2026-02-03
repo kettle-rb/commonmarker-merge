@@ -22,6 +22,7 @@ Please file a bug if you notice a violation of semantic versioning.
 
 ### Changed
 
+- ast-merge, tree_haver as direct dependencies
 - Updated documentation on Ruby version support
 
 ### Deprecated
