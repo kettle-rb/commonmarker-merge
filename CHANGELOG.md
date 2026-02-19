@@ -20,8 +20,18 @@ Please file a bug if you notice a violation of semantic versioning.
 
 ### Added
 
+- AGENTS.md
+
 ### Changed
 
+- appraisal2 v3.0.6
+- kettle-test v1.0.10
+- stone_checksums v1.0.3
+- [ast-merge v4.0.6](https://github.com/kettle-rb/ast-merge/releases/tag/v4.0.6)
+- [tree_haver v5.0.5](https://github.com/kettle-rb/tree_haver/releases/tag/v5.0.5)
+- [markdown-merge v1.0.3](https://github.com/kettle-rb/markdown-merge/releases/tag/v1.0.3)
+- tree_stump v0.2.0
+  - fork no longer required, updates all applied upstream
 - Updated documentation on hostile takeover of RubyGems
   - https://dev.to/galtzo/hostile-takeover-of-rubygems-my-thoughts-5hlo
 
