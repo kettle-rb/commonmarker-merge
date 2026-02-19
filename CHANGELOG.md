@@ -20,6 +20,25 @@ Please file a bug if you notice a violation of semantic versioning.
 
 ### Added
 
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [1.0.1] - 2026-02-19
+
+- TAG: [v1.0.1][1.0.1t]
+- COVERAGE: 86.52% -- 154/178 lines in 7 files
+- BRANCH COVERAGE: 47.73% -- 21/44 branches in 7 files
+- 86.44% documented
+
+### Added
+
 - AGENTS.md
 
 ### Changed
@@ -34,25 +53,6 @@ Please file a bug if you notice a violation of semantic versioning.
   - fork no longer required, updates all applied upstream
 - Updated documentation on hostile takeover of RubyGems
   - https://dev.to/galtzo/hostile-takeover-of-rubygems-my-thoughts-5hlo
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
-
-## [1.0.1] - 2026-02-02
-
-- TAG: [v1.0.1][1.0.1t]
-- COVERAGE: 86.52% -- 154/178 lines in 7 files
-- BRANCH COVERAGE: 47.73% -- 21/44 branches in 7 files
-- 86.44% documented
-
-### Changed
-
-- ast-merge, tree_haver as direct dependencies
 - Updated documentation on Ruby version support
 
 ## [1.0.0] - 2026-02-01
