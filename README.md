@@ -43,8 +43,20 @@ I've summarized my thoughts in [this blog post](https://dev.to/galtzo/hostile-ta
 - **Freeze blocks** - Mark sections with HTML comments to preserve them during merges
 - **Configurable merge strategies** - Choose whether template or destination wins for conflicts,
   or use a Hash for per-node-type preferences with `node_splitter` (see [ast-merge][ast-merge] docs)
+- **Conservative removal mode** - `remove_template_missing_nodes: true` removes top-level destination-only structural blocks while preserving standalone HTML comment-only fragments, link reference definitions, freeze blocks, and stable separator blank lines around preserved standalone fragments
 - **Type normalization** - Canonical node types work across all markdown backends
 - **Full CommonMarker support** - Works with all CommonMark and GitHub Flavored Markdown extensions
+
+### Removal Mode Scope
+
+`remove_template_missing_nodes: true` in `commonmarker-merge` currently follows the shared `markdown-merge` full-document contract:
+
+- removes **top-level destination-only structural blocks**
+- preserves **standalone HTML comment-only fragments**, **link reference definitions**, and **freeze blocks**
+- preserves **one separator blank line** when removed structural content collapses around a kept standalone HTML comment fragment
+- does **not** yet define generic inline-comment promotion or recursive/nested section-removal semantics
+
+Section-local `replace_mode` / partial-template behavior still follows its own conservative Markdown rules and should not be assumed to inherit the same recursive removal contract as full-document smart merge.
 
 ### The `*-merge` Gem Family
 
