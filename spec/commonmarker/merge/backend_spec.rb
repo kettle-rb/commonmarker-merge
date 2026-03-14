@@ -120,6 +120,19 @@ RSpec.describe Commonmarker::Merge::Backend do
       end
     end
 
+    describe ".from_library" do
+      it "returns markdown language when no name is provided" do
+        lang = backend::Language.from_library
+        expect(lang.name).to eq(:markdown)
+        expect(lang.backend).to eq(:commonmarker)
+      end
+
+      it "rejects non-markdown languages" do
+        expect { backend::Language.from_library(nil, name: :ruby) }
+          .to raise_error(TreeHaver::NotAvailable, /only supports Markdown/i)
+      end
+    end
+
     describe "#<=>" do
       it "compares by name" do
         lang1 = backend::Language.new(:a)
@@ -448,6 +461,35 @@ RSpec.describe Commonmarker::Merge::Backend do
             expect(children.last.prev_sibling).to be_a(backend::Node)
           end
         end
+      end
+    end
+
+    describe "link metadata" do
+      let(:source) { "[link](https://example.com \"Example\")" }
+      let(:tree) { parser.parse(source) }
+      let(:root) { tree.root_node }
+      let(:paragraph) { root.children.first }
+      let(:link) { paragraph.children.find { |child| child.type == "link" } }
+
+      it "exposes url and title for link nodes" do
+        expect(link.url).to eq("https://example.com")
+        expect(link.title).to eq("Example")
+      end
+    end
+
+    describe "shared heading/code-block helpers" do
+      let(:source) { "# Hello World\n\n```ruby\nputs :hi\n```" }
+      let(:tree) { parser.parse(source) }
+      let(:root) { tree.root_node }
+      let(:heading) { root.children.first }
+      let(:code_block) { root.children.last }
+
+      it "exposes heading level" do
+        expect(heading.header_level).to eq(1)
+      end
+
+      it "exposes fence info" do
+        expect(code_block.fence_info).to eq("ruby")
       end
     end
   end

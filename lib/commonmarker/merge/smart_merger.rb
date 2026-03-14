@@ -42,98 +42,15 @@ module Commonmarker
     #
     # @see Markdown::Merge::SmartMerger Underlying implementation
     class SmartMerger < Markdown::Merge::SmartMerger
-      # Creates a new SmartMerger for intelligent Markdown file merging.
-      #
-      # @param template_content [String] Template Markdown source code
-      # @param dest_content [String] Destination Markdown source code
-      #
-      # @param signature_generator [Proc, nil] Optional proc to generate custom node signatures.
-      #   The proc receives a node (wrapped with canonical merge_type) and should return one of:
-      #   - An array representing the node's signature
-      #   - `nil` to indicate the node should have no signature
-      #   - The original node to fall through to default signature computation
-      #
-      # @param preference [Symbol] Controls which version to use when nodes
-      #   have matching signatures but different content:
-      #   - `:destination` (default) - Use destination version (preserves customizations)
-      #   - `:template` - Use template version (applies updates)
-      #
-      # @param add_template_only_nodes [Boolean] Controls whether to add nodes that only
-      #   exist in template:
-      #   - `false` (default) - Skip template-only nodes
-      #   - `true` - Add template-only nodes to result
-      #
-      # @param freeze_token [String] Token to use for freeze block markers.
-      #   Default: "commonmarker-merge"
-      #   Looks for: <!-- commonmarker-merge:freeze --> / <!-- commonmarker-merge:unfreeze -->
-      #
-      # @param options [Hash] CommonMarker parse options
-      #
-      # @param match_refiner [#call, nil] Optional match refiner for fuzzy matching of
-      #   unmatched nodes. Default: nil (fuzzy matching disabled).
-      #   Set to TableMatchRefiner.new to enable fuzzy table matching.
-      #
-      # @param node_typing [Hash{Symbol,String => #call}, nil] Node typing configuration
-      #   for per-node-type merge preferences.
-      # @param extra_options [Hash] Additional options for forward compatibility
-      #
-      # @raise [TemplateParseError] If template has syntax errors
-      # @raise [DestinationParseError] If destination has syntax errors
-      def initialize(
-        template_content,
-        dest_content,
-        signature_generator: nil,
-        preference: :destination,
-        add_template_only_nodes: false,
-        freeze_token: DEFAULT_FREEZE_TOKEN,
-        options: {},
-        match_refiner: nil,
-        node_typing: nil,
-        **extra_options
+      Markdown::Merge::WrapperSupport.configure_smart_merger_subclass!(
+        self,
+        default_backend: :commonmarker,
+        default_freeze_token: -> { DEFAULT_FREEZE_TOKEN },
+        default_inner_merge_code_blocks: -> { DEFAULT_INNER_MERGE_CODE_BLOCKS },
+        file_analysis_class: -> { FileAnalysis },
+        template_parse_error_class: -> { TemplateParseError },
+        destination_parse_error_class: -> { DestinationParseError },
       )
-        super(
-          template_content,
-          dest_content,
-          backend: :commonmarker,
-          signature_generator: signature_generator,
-          preference: preference,
-          add_template_only_nodes: add_template_only_nodes,
-          inner_merge_code_blocks: DEFAULT_INNER_MERGE_CODE_BLOCKS,
-          freeze_token: freeze_token,
-          match_refiner: match_refiner,
-          node_typing: node_typing,
-          options: options,
-          **extra_options
-        )
-      end
-
-      # Returns the TemplateParseError class to use.
-      #
-      # @return [Class] Commonmarker::Merge::TemplateParseError
-      def template_parse_error_class
-        TemplateParseError
-      end
-
-      # Returns the DestinationParseError class to use.
-      #
-      # @return [Class] Commonmarker::Merge::DestinationParseError
-      def destination_parse_error_class
-        DestinationParseError
-      end
-
-      # Create a FileAnalysis instance for parsing.
-      #
-      # @param content [String] Markdown content to analyze
-      # @param options [Hash] Analysis options
-      # @return [Commonmarker::Merge::FileAnalysis] File analysis instance
-      def create_file_analysis(content, **opts)
-        FileAnalysis.new(
-          content,
-          freeze_token: opts[:freeze_token],
-          signature_generator: opts[:signature_generator],
-          options: opts[:options] || {},
-        )
-      end
     end
   end
 end

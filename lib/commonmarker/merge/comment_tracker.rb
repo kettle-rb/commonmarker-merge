@@ -2,6 +2,6 @@
 
 module Commonmarker
   module Merge
-    FreezeNode = Markdown::Merge::FreezeNode
+    CommentTracker = Markdown::Merge::CommentTracker
   end
 end

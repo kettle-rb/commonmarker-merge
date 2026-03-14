@@ -68,6 +68,10 @@ RSpec.describe Commonmarker::Merge do
   end
 
   describe "autoloads" do
+    it "autoloads CommentTracker" do
+      expect(described_class::CommentTracker).to be_a(Class)
+    end
+
     it "autoloads DebugLogger" do
       expect(described_class::DebugLogger).to be_a(Module)
     end
@@ -82,6 +86,10 @@ RSpec.describe Commonmarker::Merge do
 
     it "autoloads FileAnalysis" do
       expect(described_class::FileAnalysis).to be_a(Class)
+    end
+
+    it "autoloads PartialTemplateMerger" do
+      expect(described_class::PartialTemplateMerger).to be_a(Class)
     end
 
     it "autoloads FileAligner" do

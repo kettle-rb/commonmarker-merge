@@ -24,28 +24,10 @@ module Commonmarker
       # @return [String]
       DEFAULT_FREEZE_TOKEN = "commonmarker-merge"
 
-      # Initialize file analysis with CommonMarker backend.
-      #
-      # @param source [String] Markdown source code to analyze
-      # @param freeze_token [String] Token for freeze block markers (default: "commonmarker-merge")
-      # @param signature_generator [Proc, nil] Custom signature generator
-      # @param options [Hash] CommonMarker parse options
-      def initialize(source, freeze_token: DEFAULT_FREEZE_TOKEN, signature_generator: nil, options: {})
-        super(
-          source,
-          backend: :commonmarker,
-          freeze_token: freeze_token,
-          signature_generator: signature_generator,
-          options: options,
-        )
-      end
-
-      # Returns the FreezeNode class to use.
-      #
-      # @return [Class] Commonmarker::Merge::FreezeNode
-      def freeze_node_class
-        FreezeNode
-      end
+      Markdown::Merge::WrapperSupport.configure_file_analysis_subclass!(
+        self,
+        default_backend: :commonmarker,
+      )
     end
   end
 end

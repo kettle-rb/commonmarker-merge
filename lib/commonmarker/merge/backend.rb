@@ -17,52 +17,12 @@ module Commonmarker
     #   root = tree.root_node
     #   puts root.type  # => "document"
     module Backend
-      @load_attempted = false
-      @loaded = false
-
-      # Check if the Commonmarker backend is available
-      #
-      # @return [Boolean] true if commonmarker gem is available
-      class << self
-        def available?
-          return @loaded if @load_attempted # rubocop:disable ThreadSafety/ClassInstanceVariable
-          @load_attempted = true # rubocop:disable ThreadSafety/ClassInstanceVariable
-          begin
-            require "commonmarker"
-            @loaded = true # rubocop:disable ThreadSafety/ClassInstanceVariable
-          rescue LoadError
-            @loaded = false # rubocop:disable ThreadSafety/ClassInstanceVariable
-          rescue StandardError
-            @loaded = false # rubocop:disable ThreadSafety/ClassInstanceVariable
-          end
-          @loaded # rubocop:disable ThreadSafety/ClassInstanceVariable
-        end
-
-        # Reset the load state (primarily for testing)
-        #
-        # @return [void]
-        # @api private
-        def reset!
-          @load_attempted = false # rubocop:disable ThreadSafety/ClassInstanceVariable
-          @loaded = false # rubocop:disable ThreadSafety/ClassInstanceVariable
-        end
-
-        # Get capabilities supported by this backend
-        #
-        # @return [Hash{Symbol => Object}] capability map
-        def capabilities
-          return {} unless available?
-          {
-            backend: :commonmarker,
-            query: false,
-            bytes_field: false,       # Commonmarker uses line/column
-            incremental: false,
-            pure_ruby: false,         # Uses Rust via FFI
-            markdown_only: true,
-            error_tolerant: true,     # Markdown is forgiving
-          }
-        end
-      end
+      Markdown::Merge::BackendSupport.install!(
+        backend_module: self,
+        backend_name: :commonmarker,
+        gem_name: "commonmarker",
+        require_path: "commonmarker/merge",
+      )
 
       # Commonmarker language wrapper
       #
@@ -96,17 +56,12 @@ module Commonmarker
           # @param name [String, nil] Language name hint (defaults to :markdown)
           # @return [Language] Markdown language
           # @raise [TreeHaver::NotAvailable] if requested language is not Markdown
-          def from_library(_path = nil, symbol: nil, name: nil)
-            lang_name = name || symbol&.to_s&.sub(/^tree_sitter_/, "")&.to_sym || :markdown
-
-            unless lang_name == :markdown
-              raise TreeHaver::NotAvailable,
-                "Commonmarker backend only supports Markdown, not #{lang_name}."
-            end
-
-            markdown
-          end
         end
+
+        Markdown::Merge::BackendSupport.configure_markdown_only_language_class!(
+          self,
+          backend_label: "Commonmarker",
+        )
       end
 
       # Commonmarker parser wrapper
@@ -125,21 +80,21 @@ module Commonmarker
         end
       end
 
-      # Commonmarker tree wrapper
-      class Tree < TreeHaver::Base::Tree
-        def initialize(document, source)
-          super(document, source: source)
-        end
-
-        def root_node
-          Node.new(inner_tree, source: source, lines: lines)
-        end
-      end
-
       # Commonmarker node wrapper
       #
       # Wraps Commonmarker::Node to provide TreeHaver::Node-compatible interface.
       class Node < TreeHaver::Base::Node
+        Markdown::Merge::BackendSupport.configure_node_link_and_navigation!(
+          self,
+          next_sibling_selector: :next_sibling,
+          prev_sibling_selector: :previous_sibling,
+        )
+        Markdown::Merge::BackendSupport.configure_node_heading_and_code_block_helpers!(
+          self,
+          heading_matcher: ->(node) { node.type == "heading" },
+          code_block_matcher: ->(node) { node.type == "code_block" },
+        )
+
         # Get the node type as a string
         #
         # @return [String] Node type
@@ -237,100 +192,9 @@ module Commonmarker
           Point.new(0, 0)
         end
 
-        # Commonmarker-specific methods
 
-        # Get heading level (1-6)
-        # @return [Integer, nil]
-        def header_level
-          return unless type == "heading"
-          begin
-            inner_node.header_level
-          rescue
-            nil
-          end
-        end
-
-        # Get fence info for code blocks
-        # @return [String, nil]
-        def fence_info
-          return unless type == "code_block"
-          begin
-            inner_node.fence_info
-          rescue
-            nil
-          end
-        end
-
-        # Get URL for links/images
-        # @return [String, nil]
-        def url
-          inner_node.url
-        rescue
-          nil
-        end
-
-        # Get title for links/images
-        # @return [String, nil]
-        def title
-          inner_node.title
-        rescue
-          nil
-        end
-
-        # Get the next sibling
-        # @return [Node, nil]
-        def next_sibling
-          sibling = begin
-            inner_node.next_sibling
-          rescue
-            nil
-          end
-          sibling ? Node.new(sibling, source: source, lines: lines) : nil
-        end
-
-        # Get the previous sibling
-        # @return [Node, nil]
-        def prev_sibling
-          sibling = begin
-            inner_node.previous_sibling
-          rescue
-            nil
-          end
-          sibling ? Node.new(sibling, source: source, lines: lines) : nil
-        end
-
-        # Get the parent node
-        # @return [Node, nil]
-        def parent
-          p = begin
-            inner_node.parent
-          rescue
-            nil
-          end
-          p ? Node.new(p, source: source, lines: lines) : nil
-        end
       end
 
-      # Alias Point to the base class for compatibility
-      Point = TreeHaver::Base::Point
-
-      # Register this backend with TreeHaver
-      # Register for generic :markdown language
-      ::TreeHaver.register_language(
-        :markdown,
-        backend_type: :commonmarker,
-        backend_module: self,
-        gem_name: "commonmarker",
-      )
-
-      # Register the full tag for RSpec dependency tags with require path
-      # This enables tree_haver to lazily load this gem when checking availability
-      ::TreeHaver::BackendRegistry.register_tag(
-        :commonmarker_backend,
-        category: :backend,
-        backend_name: :commonmarker,
-        require_path: "commonmarker/merge",
-      ) { available? }
     end
   end
 end

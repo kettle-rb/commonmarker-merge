@@ -393,8 +393,8 @@ RSpec.describe Commonmarker::Merge::FreezeNode do
   end
 
   describe "inheritance" do
-    it "inherits from Ast::Merge::FreezeNodeBase" do
-      expect(described_class.ancestors).to include(Ast::Merge::FreezeNodeBase)
+    it "reuses Markdown::Merge::FreezeNode" do
+      expect(described_class).to eq(Markdown::Merge::FreezeNode)
     end
   end
 
