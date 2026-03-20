@@ -191,10 +191,7 @@ module Commonmarker
 
           Point.new(0, 0)
         end
-
-
       end
-
     end
   end
 end

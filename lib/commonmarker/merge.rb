@@ -41,7 +41,6 @@ module Commonmarker
   # @see SmartMerger Main entry point for merging
   # @see Markdown::Merge::SmartMerger Underlying implementation
   module Merge
-
     Markdown::Merge::WrapperSupport.install!(
       wrapper_module: self,
       require_prefix: "commonmarker/merge",
@@ -55,7 +54,6 @@ end
 
 # Ensure backend is loaded and registered
 Commonmarker::Merge.ensure_backend_loaded!
-
 
 Commonmarker::Merge::Version.class_eval do
   extend VersionGem::Basic
