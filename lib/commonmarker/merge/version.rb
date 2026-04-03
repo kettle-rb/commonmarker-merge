@@ -2,11 +2,9 @@
 
 module Commonmarker
   module Merge
-    # Version information for Commonmarker::Merge
     module Version
-      # Current version of the commonmarker-merge gem
       VERSION = "2.0.0"
     end
-    VERSION = Version::VERSION # traditional location
+    VERSION = Version::VERSION # Traditional Constant Location
   end
 end
