@@ -1,4 +1,4 @@
-# AGENTS.md - commonmarker-merge Development Guide
+# AGENTS.md - Development Guide
 
 # AGENTS.md - Development Guide
 
