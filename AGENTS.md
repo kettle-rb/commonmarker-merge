@@ -1,34 +1,13 @@
 # AGENTS.md - Development Guide
 
-# AGENTS.md - Development Guide
-
 ## 🎯 Project Overview
 
-### Running Commands
-
-Always make commands self-contained. Use `mise exec -C /home/pboling/src/kettle-rb/prism-merge -- ...` so the command gets the project environment in the same invocation.
-If the command is complicated write a script in local tmp/ and then run the script.
-
 This project is a **RubyGem** managed with the [kettle-rb](https://github.com/kettle-rb) toolchain.
-
-**Repository**: https://github.com/kettle-rb/commonmarker-merge
-**Current Version**: 1.0.1
-**Required Ruby**: >= 3.2.0 (currently developed against Ruby 4.0.1)
-
-## ⚠️ AI Agent Terminal Limitations
-
-### Terminal Output Is Available, but Each Command Is Isolated
 
 **Minimum Supported Ruby**: See the gemspec `required_ruby_version` constraint.
 **Local Development Ruby**: See `.tool-versions` for the version used in local development (typically the latest stable Ruby).
 
-**Use this pattern**:
-
-### Test Infrastructure
-
-- Uses `kettle-test` for RSpec helpers (stubbed_env, block_is_expected, silent_stream, timecop)
-- Uses `Dir.mktmpdir` for isolated filesystem tests
-- Spec helper is loaded by `.rspec` — never add `require "spec_helper"` to spec files
+## ⚠️ AI Agent Terminal Limitations
 
 ### Use `mise` for Project Environment
 
@@ -39,42 +18,13 @@ This project is a **RubyGem** managed with the [kettle-rb](https://github.com/ke
 **Recovery rule**: If a `mise exec` command goes silent or appears hung, assume `mise trust` is the first thing to check. Recover by running:
 
 ```bash
-mise trust -C /home/pboling/src/kettle-rb/commonmarker-merge
-mise exec -C /home/pboling/src/kettle-rb/commonmarker-merge -- bundle exec rspec
-```
-
-```bash
 mise trust -C /path/to/project
 mise exec -C /path/to/project -- bundle exec rspec
 ```
 
 Do this before spending time on unrelated debugging; in this workspace pattern, silent `mise` commands are usually a trust problem first.
 
-```bash
-mise trust -C /home/pboling/src/kettle-rb/commonmarker-merge
-```
-
 ✅ **CORRECT** — Run self-contained commands with `mise exec`:
-
-```bash
-mise exec -C /home/pboling/src/kettle-rb/commonmarker-merge -- bundle exec rspec
-```
-
-✅ **CORRECT**:
-```bash
-eval "$(mise env -C /home/pboling/src/kettle-rb/commonmarker-merge -s bash)" && bundle exec rspec
-```
-
-❌ **WRONG**:
-```bash
-cd /home/pboling/src/kettle-rb/commonmarker-merge
-bundle exec rspec
-```
-
-❌ **WRONG**:
-```bash
-cd /home/pboling/src/kettle-rb/commonmarker-merge && bundle exec rspec
-```
 
 ```bash
 mise exec -C /path/to/project -- bundle exec rspec
@@ -101,32 +51,6 @@ cd /path/to/project && bundle exec rspec
 
 ### Prefer Internal Tools Over Terminal
 
-### Environment Variable Helpers
-
-```ruby
-before do
-  stub_env("MY_ENV_VAR" => "value")
-end
-
-before do
-  hide_env("HOME", "USER")
-end
-```
-
-### Dependency Tags
-
-Use dependency tags to conditionally skip tests when optional dependencies are not available:
-
-### Workspace layout
-
-## 🏗️ Architecture
-
-### Toolchain Dependencies
-
-This gem is part of the **kettle-rb** ecosystem. Key development tools:
-
-### NEVER Pipe Test Commands Through head/tail
-
 ✅ **PREFERRED** — Use internal tools:
 
 - `grep_search` instead of `grep` command
@@ -148,35 +72,11 @@ Only use terminal for:
 
 When you do run tests, keep the full output visible so you can inspect failures completely.
 
-## 🏗️ Architecture: Format-Specific Implementation
+## 🏗️ Architecture
 
-### What commonmarker-merge Provides
+### Toolchain Dependencies
 
-- **`Commonmarker::Merge::SmartMerger`** – Markdown-specific SmartMerger implementation
-- **`Commonmarker::Merge::FileAnalysis`** – Markdown file analysis with section extraction
-- **`Commonmarker::Merge::NodeWrapper`** – Wrapper for Commonmarker AST nodes
-- **`Commonmarker::Merge::PartialTemplateMerger`** – Section-level partial merges
-- **`Commonmarker::Merge::MergeResult`** – Markdown-specific merge result
-- **`Commonmarker::Merge::ConflictResolver`** – Markdown conflict resolution
-- **`Commonmarker::Merge::FreezeNode`** – Markdown freeze block support
-- **`Commonmarker::Merge::DebugLogger`** – Commonmarker-specific debug logging
-
-### Key Dependencies
-
-| Gem | Role |
-|-----|------|
-| `ast-merge` (~> 4.0) | Base classes and shared infrastructure |
-| `tree_haver` (~> 5.0) | Unified parser adapter (wraps Commonmarker) |
-| `commonmarker` | CommonMark Markdown parser (MRI only) |
-| `version_gem` (~> 1.1) | Version management |
-
-### Parser Backend
-
-commonmarker-merge uses the Commonmarker parser exclusively via TreeHaver's `:commonmarker` backend:
-
-| Backend | Parser | Platform | Notes |
-|---------|--------|----------|-------|
-| `:commonmarker` | Commonmarker | MRI only | CommonMark parser, native extension |
+This gem is part of the **kettle-rb** ecosystem. Key development tools:
 
 | Tool | Purpose |
 |------|---------|
@@ -196,25 +96,6 @@ commonmarker-merge uses the Commonmarker parser exclusively via TreeHaver's `:co
 | `kettle-check-eof` | EOF newline validation |
 
 ## 📁 Project Structure
-
-```
-lib/commonmarker/merge/
-├── smart_merger.rb              # Main SmartMerger implementation
-├── partial_template_merger.rb   # Section-level merging
-├── file_analysis.rb             # Markdown file analysis
-├── node_wrapper.rb              # AST node wrapper
-├── merge_result.rb              # Merge result object
-├── conflict_resolver.rb         # Conflict resolution
-├── freeze_node.rb               # Freeze block support
-├── debug_logger.rb              # Debug logging
-└── version.rb
-
-spec/commonmarker/merge/
-├── smart_merger_spec.rb
-├── partial_template_merger_spec.rb
-├── file_analysis_spec.rb
-└── integration/
-```
 
 ```
 lib/
@@ -246,18 +127,12 @@ gemfiles/
 
 ## 🔧 Development Workflows
 
+### Running Commands
+
+Always make commands self-contained. Use `mise exec -C /home/pboling/src/kettle-rb/prism-merge -- ...` so the command gets the project environment in the same invocation.
+If the command is complicated write a script in local tmp/ and then run the script.
+
 ### Running Tests
-
-```bash
-# Full suite
-mise exec -C /home/pboling/src/kettle-rb/commonmarker-merge -- bundle exec rspec
-
-# Single file (disable coverage threshold check)
-mise exec -C /home/pboling/src/kettle-rb/commonmarker-merge -- env K_SOUP_COV_MIN_HARD=false bundle exec rspec spec/commonmarker/merge/smart_merger_spec.rb
-
-# Commonmarker backend tests
-mise exec -C /home/pboling/src/kettle-rb/commonmarker-merge -- bundle exec rspec --tag commonmarker
-```
 
 Full suite spec runs:
 
@@ -273,11 +148,6 @@ mise exec -C /path/to/project -- env K_SOUP_COV_MIN_HARD=false bundle exec rspec
 ```
 
 ### Coverage Reports
-
-```bash
-mise exec -C /home/pboling/src/kettle-rb/commonmarker-merge -- bin/rake coverage
-mise exec -C /home/pboling/src/kettle-rb/commonmarker-merge -- bin/kettle-soup-cover -d
-```
 
 ```bash
 mise exec -C /path/to/project -- bin/rake coverage
@@ -306,51 +176,9 @@ bin/kettle-release        # Full release workflow
 
 ## 📝 Project Conventions
 
-### API Conventions
-
-#### SmartMerger API
-
-- `merge` – Returns a **String** (the merged Markdown content)
-- `merge_result` – Returns a **MergeResult** object
-- `to_s` on MergeResult returns the merged content as a string
-
-#### PartialTemplateMerger API
-
-- `merge` – Merges a template section into a specific location in destination
-- Used by `ast-merge-recipe` for section-level updates
-
-#### Markdown-Specific Features
-
-**Heading-Based Sections**:
-```markdown
-# Section 1
-Content for section 1
-
-## Subsection 1.1
-Nested content
-
-# Section 2
-Content for section 2
-```
-
 ### Freeze Block Preservation
 
 Template updates preserve custom code wrapped in freeze blocks:
-
-```markdown
-<!-- commonmarker-merge:freeze -->
-Custom content that should not be overridden
-<!-- commonmarker-merge:unfreeze -->
-
-Standard content that merges normally
-```
-
-**Link Reference Preservation**:
-```markdown
-[link text][ref]
-
-[ref]: https://example.com
-```
 
 ```ruby
 # kettle-jem:freeze
@@ -368,34 +196,27 @@ Gemfiles are split into modular components under `gemfiles/modular/`. Each compo
 
 ## 🧪 Testing Patterns
 
-### TreeHaver Dependency Tags
+### Test Infrastructure
 
-**Available tags**:
-- `:commonmarker` – Requires Commonmarker backend
-- `:markdown_parsing` – Requires Markdown parser
+- Uses `kettle-test` for RSpec helpers (stubbed_env, block_is_expected, silent_stream, timecop)
+- Uses `Dir.mktmpdir` for isolated filesystem tests
+- Spec helper is loaded by `.rspec` — never add `require "spec_helper"` to spec files
 
-✅ **CORRECT**:
-```ruby
-RSpec.describe Commonmarker::Merge::SmartMerger, :commonmarker do
-  # Skipped if Commonmarker not available
-end
-```
+### Environment Variable Helpers
 
-❌ **WRONG**:
 ```ruby
 before do
-  skip "Requires Commonmarker" unless defined?(CommonMarker)  # DO NOT DO THIS
+  stub_env("MY_ENV_VAR" => "value")
+end
+
+before do
+  hide_env("HOME", "USER")
 end
 ```
 
-## 💡 Key Insights
+### Dependency Tags
 
-1. **Heading-based structure**: Sections matched by heading text
-2. **`.text` strips formatting**: When matching by text, backticks and other formatting are removed
-3. **Link references preserved**: Reference-style links maintained during merge
-4. **PartialTemplateMerger**: Supports injecting template sections into specific locations
-5. **Freeze blocks use HTML comments**: `<!-- commonmarker-merge:freeze -->`
-6. **MRI only**: Commonmarker requires native extensions, MRI only
+Use dependency tags to conditionally skip tests when optional dependencies are not available:
 
 ```ruby
 RSpec.describe SomeClass, :prism_merge do
@@ -404,46 +225,5 @@ end
 ```
 
 ## 🚫 Common Pitfalls
-
-1. **Commonmarker requires MRI**: Does not work on JRuby or TruffleRuby
-2. **NEVER use manual skip checks** – Use dependency tags (`:commonmarker`)
-3. **Text matching strips formatting** – Match on plain text, not markdown syntax
-4. **Do NOT load vendor gems** – They are not part of this project; they do not exist in CI
-5. **Use `tmp/` for temporary files** – Never use `/tmp` or other system directories
-6. **Do NOT expect `cd` to persist** – Every terminal command is isolated; use a self-contained `mise exec -C ... -- ...` invocation.
-7. **Do NOT rely on prior shell state** – Previous `cd`, `export`, aliases, and functions are not available to the next command.
-
-## 🔧 Markdown-Specific Notes
-
-### Node Types
-
-```markdown
-document         # Root node
-heading          # # Heading
-paragraph        # Regular text
-code_block       # ```code```
-list             # - item or 1. item
-link             # [text](url)
-image            # ![alt](src)
-```
-
-### Text Matching Behavior
-
-```markdown
-Source:     ### The `*-merge` Gem Family
-.text:      "The *-merge Gem Family\n"
-
-# Backticks, bold, italic stripped in .text
-```
-
-### Merge Behavior
-
-- **Headings**: Matched by heading text (stripped of formatting)
-- **Sections**: Content from heading to next same-level heading
-- **Paragraphs**: Position-based within sections
-- **Code blocks**: Matched by language and content
-- **Lists**: Can be merged or replaced
-- **Links**: Reference-style links preserved
-- **Freeze blocks**: Protect customizations from template updates
 
 1. **NEVER pipe test output through `head`/`tail`** — Run tests without truncation so you can inspect the full output.
