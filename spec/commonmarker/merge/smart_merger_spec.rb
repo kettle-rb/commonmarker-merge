@@ -841,4 +841,30 @@ RSpec.describe Commonmarker::Merge::SmartMerger do
     # Line 278: when node lacks source position - fallback to to_commonmark
     # This is hard to trigger with real CommonMarker nodes
   end
+
+  describe "multi-byte character (emoji) handling" do
+    it "does not duplicate headings when destination contains emoji" do
+      template = "# Project\n\n## Contributing\n\nContent.\n"
+      destination = "# 🪙 Project\n\n## Contributing\n\nCustom content.\n"
+      merger = described_class.new(template, destination, preference: :destination)
+      result = merger.merge_result
+      expect(result.content.scan("## Contributing").size).to eq(1)
+    end
+
+    it "preserves emoji in heading text" do
+      template = "# Title\n\nText.\n"
+      destination = "# 🍲 Title\n\nCustom text.\n"
+      merger = described_class.new(template, destination, preference: :destination)
+      result = merger.merge_result
+      expect(result.content).to include("🍲")
+    end
+
+    it "handles CJK characters without duplication" do
+      template = "# Title\n\nEnglish.\n"
+      destination = "# Title\n\n日本語。\n"
+      merger = described_class.new(template, destination, preference: :destination)
+      result = merger.merge_result
+      expect(result.content.scan("# Title").size).to eq(1)
+    end
+  end
 end
