@@ -7,7 +7,7 @@
 [🖼️kettle-rb-i]: https://logos.galtzo.com/assets/images/kettle-rb/avatar-192px.svg
 [🖼️kettle-rb]: https://github.com/kettle-rb
 
-# 🍲 Commonmarker::Merge
+# ☯️ Commonmarker::Merge
 
 [![Version][👽versioni]][👽version] [![GitHub tag (latest SemVer)][⛳️tag-img]][⛳️tag] [![License: MIT][📄license-img]][📄license-ref] [![Downloads Rank][👽dl-ranki]][👽dl-rank] [![Open Source Helpers][👽oss-helpi]][👽oss-help] [![CodeCov Test Coverage][🏀codecovi]][🏀codecov] [![Coveralls Test Coverage][🏀coveralls-img]][🏀coveralls] [![QLTY Test Coverage][🏀qlty-covi]][🏀qlty-cov] [![QLTY Maintainability][🏀qlty-mnti]][🏀qlty-mnt] [![CI Heads][🚎3-hd-wfi]][🚎3-hd-wf] [![CI Runtime Dependencies @ HEAD][🚎12-crh-wfi]][🚎12-crh-wf] [![CI Current][🚎11-c-wfi]][🚎11-c-wf] [![CI Truffle Ruby][🚎9-t-wfi]][🚎9-t-wf] [![CI JRuby][🚎10-j-wfi]][🚎10-j-wf] [![Deps Locked][🚎13-🔒️-wfi]][🚎13-🔒️-wf] [![Deps Unlocked][🚎14-🔓️-wfi]][🚎14-🔓️-wf] [![CI Test Coverage][🚎2-cov-wfi]][🚎2-cov-wf] [![CI Style][🚎5-st-wfi]][🚎5-st-wf] [![CodeQL][🖐codeQL-img]][🖐codeQL] [![Apache SkyWalking Eyes License Compatibility Check][🚎15-🪪-wfi]][🚎15-🪪-wf]
 
@@ -27,7 +27,6 @@ I've summarized my thoughts in [this blog post](https://dev.to/galtzo/hostile-ta
 </details>
 
 ## 🌻 Synopsis
-
 
 `commonmarker-merge` is a thin wrapper around [markdown-merge][markdown-merge] that provides:
 
@@ -320,7 +319,6 @@ NOTE: Be prepared to track down certs for signed gems and add them the same way 
 
 ## ⚙️ Configuration
 
-
 ### Freeze Blocks
 
 Freeze blocks prevent sections from being modified during merges. They are marked
@@ -330,7 +328,6 @@ with HTML comments that are invisible when the Markdown is rendered:
 <!-- commonmarker-merge:freeze -->
 
 ## 🔧 Basic Usage
-
 
 ### Merging Two Markdown Files
 
@@ -366,6 +363,7 @@ source = File.read("README.md")
 analysis = Commonmarker::Merge::FileAnalysis.new(source)
 
 # Iterate over all block elements
+
 analysis.statements.each do |node|
   case node
   when Commonmarker::Merge::FreezeNode
@@ -378,6 +376,7 @@ analysis.statements.each do |node|
 end
 
 # Get just the freeze blocks
+
 analysis.freeze_blocks.each do |freeze_node|
   puts "Protected: #{freeze_node.content[0..50]}..."
 end
@@ -388,7 +387,9 @@ end
 Override how elements are matched between files:
 
 ```ruby
+
 # Match headings only by level, ignoring content
+
 custom_sig = ->(node) {
   if node.respond_to?(:type) && node.type == :heading
     [:heading, node.header_level]  # Match any h1 to any h1, etc.
@@ -431,7 +432,9 @@ destination = <<~MD
 MD
 
 # Default merge won't match the tables (headers differ)
+
 # Use TableMatchRefiner to enable fuzzy matching
+
 merger = Commonmarker::Merge::SmartMerger.new(
   template,
   destination,
@@ -442,8 +445,12 @@ merger = Commonmarker::Merge::SmartMerger.new(
 result = merger.merge
 
 # Tables are now matched despite header differences
+
 # ("Endpoint" ~ "API Endpoint", "Method" ~ "HTTP Method", etc.)
+
 ```
+
+## 🔧 Basic Usage
 
 ## 🦷 FLOSS Funding
 
