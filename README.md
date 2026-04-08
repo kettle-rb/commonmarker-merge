@@ -326,6 +326,121 @@ with HTML comments that are invisible when the Markdown is rendered:
 
 ```markdown
 <!-- commonmarker-merge:freeze -->
+## This Section Is Protected
+
+Any content here will be preserved exactly as-is during merges.
+The merge tool will not modify, replace, or remove this content.
+
+<!-- commonmarker-merge:unfreeze -->
+```
+
+You can add an optional reason to document why a section is frozen:
+
+```markdown
+<!-- commonmarker-merge:freeze Manual TOC - do not auto-generate -->
+## Table of Contents
+- [Installation](#installation)
+- [Usage](#usage)
+<!-- commonmarker-merge:unfreeze -->
+```
+
+### Custom Freeze Token
+
+Use a custom freeze token if you need to avoid conflicts with other tools:
+
+```ruby
+merger = Commonmarker::Merge::SmartMerger.new(
+  template,
+  destination,
+  freeze_token: "my-project",
+)
+# Now looks for: <!-- my-project:freeze --> and <!-- my-project:unfreeze -->
+```
+
+### Merge Preferences
+
+Control how conflicts between template and destination are resolved:
+
+```ruby
+# Preserve destination customizations (default)
+merger = Commonmarker::Merge::SmartMerger.new(
+  template,
+  destination,
+  preference: :destination,
+)
+
+# Apply template updates (overwrite destination)
+merger = Commonmarker::Merge::SmartMerger.new(
+  template,
+  destination,
+  preference: :template,
+)
+
+# Add new sections from template that don't exist in destination
+merger = Commonmarker::Merge::SmartMerger.new(
+  template,
+  destination,
+  add_template_only_nodes: true,
+)
+```
+
+### Debug Logging
+
+Enable debug logging to see merge decisions:
+
+```bash
+export COMMONMARKER_MERGE_DEBUG=1
+```
+
+### Table Match Refiner
+
+When tables don't match by exact signature (identical headers), the `TableMatchRefiner`
+uses fuzzy matching to pair tables that have:
+
+- Similar headers (e.g., "Value" vs "Values")
+- Similar first column content (row labels)
+- Similar overall structure and content
+
+<!-- end list -->
+
+```ruby
+# Enable table fuzzy matching with custom threshold
+merger = Commonmarker::Merge::SmartMerger.new(
+  template,
+  destination,
+  match_refiners: [
+    Commonmarker::Merge::TableMatchRefiner.new(threshold: 0.6),
+  ],
+)
+```
+
+#### TableMatchAlgorithm Weights
+
+The `TableMatchAlgorithm` uses a multi-factor scoring system with configurable weights:
+
+| Factor         | Default Weight | Description                                                  |
+|----------------|----------------|--------------------------------------------------------------|
+| `header_match` | 0.25           | Percentage of matching header cells (Levenshtein similarity) |
+| `first_column` | 0.20           | Percentage of matching first column cells                    |
+| `row_content`  | 0.25           | Average match percentage for rows with matching first column |
+| `total_cells`  | 0.15           | Overall cell matching percentage                             |
+| `position`     | 0.15           | Position distance (closer tables score higher)               |
+
+```ruby
+# Custom weights for specific use cases
+refiner = Commonmarker::Merge::TableMatchRefiner.new(
+  threshold: 0.5,
+  algorithm_options: {
+    weights: {
+      header_match: 0.4,  # Prioritize header matching
+      first_column: 0.2,
+      row_content: 0.2,
+      total_cells: 0.1,
+      position: 0.1,
+    },
+  },
+)
+```
 
 ## 🔧 Basic Usage
 
@@ -363,7 +478,6 @@ source = File.read("README.md")
 analysis = Commonmarker::Merge::FileAnalysis.new(source)
 
 # Iterate over all block elements
-
 analysis.statements.each do |node|
   case node
   when Commonmarker::Merge::FreezeNode
@@ -376,7 +490,6 @@ analysis.statements.each do |node|
 end
 
 # Get just the freeze blocks
-
 analysis.freeze_blocks.each do |freeze_node|
   puts "Protected: #{freeze_node.content[0..50]}..."
 end
@@ -387,9 +500,7 @@ end
 Override how elements are matched between files:
 
 ```ruby
-
 # Match headings only by level, ignoring content
-
 custom_sig = ->(node) {
   if node.respond_to?(:type) && node.type == :heading
     [:heading, node.header_level]  # Match any h1 to any h1, etc.
@@ -432,9 +543,7 @@ destination = <<~MD
 MD
 
 # Default merge won't match the tables (headers differ)
-
 # Use TableMatchRefiner to enable fuzzy matching
-
 merger = Commonmarker::Merge::SmartMerger.new(
   template,
   destination,
@@ -445,12 +554,8 @@ merger = Commonmarker::Merge::SmartMerger.new(
 result = merger.merge
 
 # Tables are now matched despite header differences
-
 # ("Endpoint" ~ "API Endpoint", "Method" ~ "HTTP Method", etc.)
-
 ```
-
-## 🔧 Basic Usage
 
 ## 🦷 FLOSS Funding
 
