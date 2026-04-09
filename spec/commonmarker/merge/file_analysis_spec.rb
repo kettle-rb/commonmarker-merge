@@ -445,11 +445,9 @@ RSpec.describe Commonmarker::Merge::FileAnalysis do
       let(:source) { "# Level 1\n\n## Level 2" }
       let(:analysis) { described_class.new(source) }
 
-      it "includes heading type, level, and text" do
+      it "includes heading type and level (H1 is singleton — no text)" do
         sig = analysis.signature_at(0)
-        expect(sig).to include(:heading)
-        expect(sig).to include(1) # heading level
-        expect(sig).to include("Level 1") # heading text
+        expect(sig).to eq([:heading, 1])
       end
     end
 
