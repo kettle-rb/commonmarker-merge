@@ -1,0 +1,7 @@
+{
+  "spec/commonmarker/merge/comment_behavior_matrix_spec.rb:1547430724": [
+    [6, 1, 95, "RSpec/SpecFilePathFormat: Spec path should end with `commonmarker/merge/smart_merger*comment_behavior_matrix*_spec.rb`.", 3671430531],
+    [6, 50, 25, "RSpec/DescribeMethod: The second argument to describe should be the method being tested. '#instance' or '.class'.", 1921084705],
+    [12, 21, 32, "RSpec/DescribedClass: Use `described_class` instead of `Commonmarker::Merge::SmartMerger`.", 993957761]
+  ]
+}
