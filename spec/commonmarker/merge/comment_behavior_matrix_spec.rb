@@ -3,7 +3,7 @@
 require "spec_helper"
 require "ast/merge/rspec/shared_examples"
 
-RSpec.describe "commonmarker comment behavior matrix", :commonmarker_merge do
+RSpec.describe Commonmarker::Merge::SmartMerger, "comment behavior matrix", :commonmarker_merge do
   extend Ast::Merge::RSpec::CommentBehaviorMatrixAdapters
 
   it_behaves_like "Ast::Merge::CommentBehaviorMatrix" do
