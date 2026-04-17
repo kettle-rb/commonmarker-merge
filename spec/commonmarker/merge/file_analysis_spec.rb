@@ -3,6 +3,45 @@
 require "spec_helper"
 
 RSpec.describe Commonmarker::Merge::FileAnalysis do
+  describe "FileAnalyzable contract" do
+    it_behaves_like "Ast::Merge::FileAnalyzable" do
+      let(:file_analysis_class) { described_class }
+      let(:freeze_node_class) { Markdown::Merge::FreezeNode }
+      let(:sample_source) { "# Title\n\nParagraph.\n" }
+      let(:sample_source_with_freeze) do
+        <<~MARKDOWN
+          # Title
+
+          <!-- commonmarker-merge:freeze -->
+          ## Frozen Section
+          Frozen content.
+          <!-- commonmarker-merge:unfreeze -->
+
+          ## Regular Section
+        MARKDOWN
+      end
+      let(:build_file_analysis) do
+        ->(source, **opts) { described_class.new(source, **opts) }
+      end
+
+      let(:analysis_expected_feature_profile) do
+        {
+          owner_selector: :shared_default,
+          match_key: :signature,
+          read_strategy: :source_augmented_portable_write,
+          attachment_strategy: :normalize_tracked_layout_merge,
+          comment_style: :html_comment,
+          render_family: nil,
+          capabilities: {layout_aware: true, logical_owner: true},
+          logical_owners: {link_definition: :preserve_if_referenced},
+          repair_policies: [],
+          surfaces: [{name: :fenced_code_block, selector: :language_tag, metadata: {}}],
+          delegation_policies: [{surface_name: :fenced_code_block, strategy: :by_language, metadata: {}}],
+        }
+      end
+    end
+  end
+
   describe "#initialize" do
     context "with simple markdown" do
       let(:source) do
